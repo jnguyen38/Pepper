@@ -1,0 +1,117 @@
+.profileContainer {
+    width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    flex-grow: 1;
+    padding-bottom: 75px;
+}
+
+
+
+.profilePic {
+    width: 50%;
+    height: 200px;
+    margin-bottom: 5%;
+    position: relative;
+    border-radius: 10px;
+}
+
+.profilePicImg {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.edit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    box-shadow: 0 0 3px #ffffff44;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.editIcon {
+    width: 150%;
+    height: 150%;
+}
+
+.textContainer {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.contactInfo {
+    width: 100%;
+    padding-bottom: 15px;
+    padding-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.infoLine {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.socialInfo {
+    width: 100%;
+    border-top-width: 1px;
+    border-top-color: #00000011;
+    border-bottom-width: 1px;
+    border-bottom-color: #00000011;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.socialSection {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-left-color: #00000011;
+    border-left-width: 1px;
+    padding: 15px 0;
+}
+
+.socialIcon {
+    width: 50px;
+    height: 50px;
+}
+
+.optionContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 0;
+    gap: 20px;
+}
+
+.option {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: flex-start;
+    align-items: center;
+    width: 80%;
+}

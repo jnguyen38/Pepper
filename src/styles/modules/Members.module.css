@@ -1,0 +1,78 @@
+.scrollViewContainer {
+    flex-grow: 1;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 75px;
+}
+
+.header {
+    height: 55px;
+    background-color: white;
+    border-bottom-color: #6464f644;
+    border-bottom-width: 1px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.members {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 0 40px 0;
+}
+
+.member {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 5px 20px;
+}
+
+.toProfile {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.profilePic {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.textHolder {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.follow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #6464f6;
+    border-radius: 5px;
+    margin-left: auto;
+    padding: 5px 8px;
+}
+
+.friend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6464f6;
+    border-radius: 5px;
+    margin-left: auto;
+    padding: 5px 8px;
+}

@@ -1,0 +1,133 @@
+@import "./components/Spacing.css";
+@import "./components/Input.css";
+@import "./components/Breakpoints.css";
+@import "./components/Animations.css";
+
+.relative {
+    position: relative;
+}
+
+body {
+    margin: 0;
+    font-family: "Outfit", "Yellowtail", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.statusBar {
+    height: 100%;
+    width: 100%;
+    background-color: white;
+}
+
+.linearBackground {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
+.rounded5 {border-radius: 5px;}
+.rounded10 {border-radius: 10px;}
+.rounded20 {border-radius: 20px;}
+.roundedHalf {border-radius: 50%;}
+
+/* Flexbox Classes */
+
+.d-none {display: none !important;}
+.d-flex {display: flex; align-items: center;}
+.f-wrap {flex-wrap: wrap;}
+.f-col {flex-direction: column;}
+.jc-sb {justify-content: space-between;}
+.jc-sa {justify-content: space-around;}
+.jc-fs {justify-content: flex-start;}
+.jc-fe {justify-content: flex-end;}
+.jc-c {justify-content: center;}
+.as-c {align-self: center;}
+.as-fs {align-self: flex-start;}
+.as-fe {align-self: flex-end;}
+
+.d-flex-row-l {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.d-flex-row-c {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.d-flex-col-l {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.d-flex-col-c {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.f-responsive-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    min-width: 90px;
+    height: 40px;
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    padding: 0 20px;
+    font-size: 1em;
+}
+
+/* Grid Classes */
+.d-grid {display: grid;}
+.grid-col-12 {grid-template-columns: repeat(12, 1fr);}
+.grid-4 {grid-column: span 4;}
+.grid-6 {grid-column: span 6;}
+.grid-8 {grid-column: span 8;}
+.grid-12 {grid-column: span 12;}
+
+/* Line Classes */
+
+.line {
+    width: 50px;
+    height: 2px;
+    margin: 6px 0;
+}
+
+.fs-buffer {
+    height: 100vh;
+    width: 80%;
+}
+
+
+
+.fade-in {
+    animation: fade-in 750ms ease-in-out;
+}
+
+.controlled-width {
+    max-width: min(100%, 700px);
+}
+
+@keyframes fade-in {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}

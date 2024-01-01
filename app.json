@@ -4,27 +4,36 @@
     "slug": "pepper",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/brand/pepper-purple-app-icon.png",
     "userInterfaceStyle": "light",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "js",
+        "jsx",
+        "css"
+      ]
+    },
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "image": "./assets/brand/pepper-purple-app-icon.png",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.pepper"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/brand/pepper-purple-app-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.pepper"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/brand/pepper-purple-app-icon.png"
     }
   }
 }

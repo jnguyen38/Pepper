@@ -1,20 +1,24 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import fonts from "./src/js/fonts";
+import {Text} from "react-native";
+import {useFonts} from "expo-font";
+import {RecoilRoot} from "recoil";
+import Index from "./src";
+import {Provider} from "react-native-paper"
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+    const [fontsLoaded, error] = useFonts(fonts);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    if (!fontsLoaded) {
+        return (
+            <Text>Loading...</Text>
+        )
+    }
+
+    return (
+        <RecoilRoot>
+            <Provider>
+                <Index/>
+            </Provider>
+        </RecoilRoot>
+    );
+}

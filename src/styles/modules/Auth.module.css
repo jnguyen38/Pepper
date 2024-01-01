@@ -1,0 +1,108 @@
+.loginContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.loginForm {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin: 20px;
+}
+
+.logo {
+    width: 50%;
+    height: 10%;
+    object-fit: contain;
+}
+
+.top {
+    position: absolute;
+    top: 50px;
+}
+
+.text {
+    width: 85%;
+    text-align: center;
+    margin: 10px;
+}
+
+.input {
+    width: 80%;
+    height: 50px;
+    padding: 13px 15px 11px 15px;
+    background-color: #ffffff44;
+    border-radius: 5px;
+    color: white;
+}
+
+.loginButton {
+    width: 80%;
+    height: 50px;
+    background-color: #ffffff08;
+    border-radius: 5px;
+    border: 1px #ffffff44 solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.or {
+    width: 100%;
+    height: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.line {
+    width: 30%;
+    height: 1px;
+    background-color: #ffffff44;
+}
+
+.providers {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.provider {
+    width: 45%;
+    aspect-ratio: auto;
+    object-fit: contain;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 20px;
+    width: 100%;
+    height: 90px;
+    background-color: #ffffff11;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    border-top-width: 1px;
+    border-top-color: #ffffff44;
+}
+
+.forgotLock {
+    width: 60%;
+    height: 22%;
+    object-fit: contain;
+    margin-bottom: 10%;
+}
