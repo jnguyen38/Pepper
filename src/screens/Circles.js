@@ -9,7 +9,7 @@ import sibc from "../../assets/sibc.webp";
 import rugby from "../../assets/rugby.png";
 import engineers from "../../assets/engineers.jpeg";
 import climb from "../../assets/climb.jpeg";
-import {BackButton, nFormatter} from "../js/util";
+import {BackButton, CustomSafeAreaView, nFormatter} from "../js/util";
 
 const circles = [
     {
@@ -50,22 +50,6 @@ const circles = [
     }
 ]
 
-export function CircleScreen(props) {
-    return (
-        <View style={root.statusBar}>
-            <SafeAreaView>
-                <BackButton safeView={true} light={true} {...props}/>
-
-                <ScrollView contentContainerStyle={styles.scrollViewContainer}
-                            showsVerticalScrollIndicator={false}
-                            decelerationRate={"fast"}>
-                    <Content {...props}/>
-                </ScrollView>
-            </SafeAreaView>
-        </View>
-    )
-}
-
 export default function ExploreCircleScreen(props) {
     return (
         <View style={root.statusBar}>
@@ -86,6 +70,22 @@ export default function ExploreCircleScreen(props) {
                     <Content {...props}/>
                 </ScrollView>
             </SafeAreaView>
+        </View>
+    )
+}
+
+export function CircleScreen(props) {
+    return (
+        <View style={root.statusBar}>
+            <CustomSafeAreaView>
+                <BackButton safeView={true} light={true} {...props}/>
+
+                <ScrollView contentContainerStyle={styles.scrollViewContainer}
+                            showsVerticalScrollIndicator={false}
+                            decelerationRate={"fast"}>
+                    <Content {...props}/>
+                </ScrollView>
+            </CustomSafeAreaView>
         </View>
     )
 }

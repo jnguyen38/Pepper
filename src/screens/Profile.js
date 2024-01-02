@@ -26,7 +26,7 @@ import logout from "../../assets/profile/logout-slim.png";
 import settings from "../../assets/profile/settings.png";
 import privacy from "../../assets/profile/privacy.png";
 import terms from "../../assets/profile/terms.png";
-import {BackButton} from "../js/util";
+import {BackButton, CustomSafeAreaView} from "../js/util";
 
 export default function ProfileScreen(props) {
     const [auth, setAuth] = useRecoilState(authState);
@@ -106,7 +106,7 @@ export default function ProfileScreen(props) {
 export function OtherProfileScreen(props) {
     return (
         <View style={[root.statusBar]}>
-            <SafeAreaView>
+            <CustomSafeAreaView>
                 <BackButton safeView={true} {...props}/>
 
                 <ScrollView contentContainerStyle={styles.profileContainer}
@@ -156,7 +156,7 @@ export function OtherProfileScreen(props) {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </CustomSafeAreaView>
         </View>
     )
 }

@@ -39,10 +39,20 @@ export function BackButton(props) {
         <TouchableOpacity style={[styles.backArrowHolder,
             {
                 backgroundColor: props.transparent ? "transparent" : props.light ? "#ffffffcc" : "#6464f6cc",
-                top: props.safeView ? 65 : 25
+                top: props.safeView ? 5 : 25
             }]}
                    onPress={() => props.navigation.goBack()} activeOpacity={0.5}>
             <Image source={props.light ? backArrowPurple : backArrow} style={[styles.backArrow]}/>
         </TouchableOpacity>
+    )
+}
+
+export function CustomSafeAreaView({children}) {
+    return (
+        <SafeAreaView>
+            <View style={{width: "100%", height: "100%", position: "relative"}}>
+                {children}
+            </View>
+        </SafeAreaView>
     )
 }

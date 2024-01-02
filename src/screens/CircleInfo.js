@@ -1,10 +1,9 @@
-import {Image, View, Text, StatusBar, StyleSheet, Pressable} from "react-native";
+import {Image, Pressable, StatusBar, StyleSheet, Text, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/CircleInfo.module.css";
 import root from "../styles/Root.module.css";
 import Animated, {interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset} from "react-native-reanimated";
 import {LinearGradient} from "expo-linear-gradient";
-import backArrow from "../../assets/back-arrow.png";
 import circles from "../../assets/profile/circlesPurple.png";
 import events from "../../assets/events.png";
 import reply from "../../assets/reply.png";

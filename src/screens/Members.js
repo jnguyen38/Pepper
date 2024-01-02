@@ -3,7 +3,7 @@ import text from "../js/text";
 import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";
 import mockPicture from "../../assets/brand/pepper-purple-app-icon.png";
-import {BackButton} from "../js/util";
+import {BackButton, CustomSafeAreaView} from "../js/util";
 
 const members = [
     {
@@ -106,7 +106,7 @@ const members = [
 export default function MembersScreen(props) {
     return (
         <View style={root.statusBar}>
-            <SafeAreaView>
+            <CustomSafeAreaView>
                 <BackButton transparent={true} light={true} safeView={true} {...props}/>
 
                 <View style={styles.header}>
@@ -118,7 +118,7 @@ export default function MembersScreen(props) {
                             decelerationRate={"fast"}>
                     <Content {...props}/>
                 </ScrollView>
-            </SafeAreaView>
+            </CustomSafeAreaView>
         </View>
     )
 }
