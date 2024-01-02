@@ -1,0 +1,56 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.scrollView {
+    width: 300%;
+    height: 85%;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-top: 3%;
+}
+
+.scrollSection {
+    height: 100%;
+    border-radius: 20px;
+    background-color: white;
+    box-shadow: 0 0 5px white;
+    padding: 25px 20px;
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.dotContainer {
+    width: 100px;
+    height: 20px;
+    position: absolute;
+    top: 88%;
+    left: auto;
+    right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.textInput {
+    height: 50px;
+    width: 100%;
+    background-color: white;
+}

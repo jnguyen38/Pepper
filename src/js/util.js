@@ -1,14 +1,4 @@
-import {
-    PixelRatio,
-    Platform,
-    StyleSheet,
-    SafeAreaView,
-    StatusBar,
-    View,
-    Image,
-    Pressable,
-    TouchableOpacity
-} from "react-native";
+import {Image, PixelRatio, SafeAreaView, TouchableOpacity, View} from "react-native";
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
@@ -55,4 +45,11 @@ export function CustomSafeAreaView({children}) {
             </View>
         </SafeAreaView>
     )
+}
+
+export function Line(props) {
+    return (
+        <View style={{width: "100%", height: 1, backgroundColor: props.color}}/>
+    )
+
 }

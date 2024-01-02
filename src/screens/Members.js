@@ -1,4 +1,4 @@
-import {SafeAreaView, ScrollView, View, Text, Image, Pressable} from "react-native";
+import {Image, Pressable, ScrollView, Text, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";

@@ -1,4 +1,4 @@
-import {View, Text, Image, SafeAreaView, ScrollView, Pressable, TouchableOpacity} from "react-native";
+import {Image, SafeAreaView, ScrollView, Text, TouchableHighlight, TouchableOpacity, View} from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import text from "../js/text";
 import styles from "../styles/modules/Circles.module.css";
@@ -94,8 +94,7 @@ function Content(props) {
     return (
         <View style={styles.circles}>
             {circles.map((item, index) => (
-                <View style={styles.circle}
-                      key={index}>
+                <View style={styles.circle} key={index}>
                     <Image source={item.background} style={styles.circleImage}/>
 
                     <LinearGradient colors={['#3971f6aa', '#9028ccaa']}
@@ -103,7 +102,7 @@ function Content(props) {
                                     end={{x: 1, y: 0}}
                                     style={[root.linearBackground, root.rounded10]}/>
 
-                    <TouchableOpacity style={styles.circleText} activeOpacity={0.5}
+                    <TouchableOpacity style={styles.circleText} activeOpacity={0.8}
                                onPress={() => props.navigation.push("CircleInfo", item)}>
                         <Text style={[text.h1, text.white, {textAlign: "center"}]}>{item.title}</Text>
                         <Text style={[text.p, text.white]}>{nFormatter(item.members, 1)} members</Text>

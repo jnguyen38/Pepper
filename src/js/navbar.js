@@ -1,4 +1,4 @@
-import {View, Text, Image, Pressable, TouchableOpacity} from "react-native";
+import {Image, Pressable, TouchableOpacity, View} from "react-native";
 import styles from "../styles/modules/Navbar.module.css";
 
 import home from "../../assets/navbar/home-black.png";
@@ -42,10 +42,12 @@ export default function NavBar(props) {
                 <Image source={tab === 1 ? searchPurple : search} style={[{width: 30, height: 30}, styles.icon]}/>
             </TouchableOpacity>
             <View style={styles.navItem}>
-                <TouchableOpacity style={styles.add} activeOpacity={0.8}
-                           onPress={() => updateTab(2)}>
-                    <Image source={tab === 2 ? addPurple : add} style={[{width: 25, height: 25}, styles.icon]}/>
-                </TouchableOpacity>
+                <View style={styles.add}>
+                    <TouchableOpacity onPress={() => updateTab(2)} activeOpacity={OPACITY}
+                                      style={styles.addTouchable}>
+                        <Image source={tab === 2 ? addPurple : add} style={[{width: 25, height: 25}, styles.icon]}/>
+                    </TouchableOpacity>
+                </View>
             </View>
             <TouchableOpacity style={styles.navItem} activeOpacity={OPACITY}
                        onPress={() => updateTab(3)}>

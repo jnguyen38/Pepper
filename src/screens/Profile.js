@@ -1,21 +1,13 @@
-import {
-    Button,
-    Text,
-    View,
-    Image,
-    Pressable,
-    ScrollView,
-    SafeAreaView,
-    StatusBar,
-    TouchableOpacity
-} from "react-native";
+import {Image, Pressable, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {useRecoilState} from "recoil";
 import {authState} from "../js/recoil";
+import {BackButton, CustomSafeAreaView} from "../js/util";
+import {LinearGradient} from "expo-linear-gradient";
+
 import styles from "../styles/modules/Profile.module.css";
 import root from "../styles/Root.module.css";
 import text from "../js/text";
 import profilePic from "../../assets/brand/pepper-purple-app-icon.png";
-import {LinearGradient} from "expo-linear-gradient";
 import edit from "../../assets/profile/edit.png";
 import phone from "../../assets/profile/phone.png";
 import mail from "../../assets/profile/mail.png";
@@ -26,7 +18,6 @@ import logout from "../../assets/profile/logout-slim.png";
 import settings from "../../assets/profile/settings.png";
 import privacy from "../../assets/profile/privacy.png";
 import terms from "../../assets/profile/terms.png";
-import {BackButton, CustomSafeAreaView} from "../js/util";
 
 export default function ProfileScreen(props) {
     const [auth, setAuth] = useRecoilState(authState);
