@@ -2,7 +2,7 @@ import {Image, Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, V
 import {LinearGradient} from "expo-linear-gradient";
 import {useState} from "react";
 import {useRecoilState} from "recoil";
-import {authState} from "../js/recoil";
+import {authState, tabState} from "../js/recoil";
 
 import pepperWhite from "../../assets/brand/Pepper-Big-Logo-White.png";
 import google from "../../assets/providers/googleNeutralSI.png";
@@ -13,9 +13,11 @@ import root from "../styles/Root.module.css";
 export default function LoginScreen(props) {
     const [hidePass, setHidePass] = useState(true)
     const [auth, setAuth] = useRecoilState(authState);
+    const [tab, setTab] = useRecoilState(tabState);
 
     function authenticate() {
         setAuth(true);
+        setTab(0);
     }
 
     return (
@@ -48,7 +50,7 @@ export default function LoginScreen(props) {
                     <Pressable style={[styles.loginButton]} onPress={authenticate}>
                         <Text style={[text.button, text.white]}>Log In</Text>
                     </Pressable>
-                    <Pressable onPress={() => props.navigation.push('ForgotPassword')}>
+                    <Pressable onPress={() => props.navigation.navigate('ForgotPassword')}>
                         <Text style={[text.small, text.white]}>Forgot Password?</Text>
                     </Pressable>
                 </View>
@@ -68,7 +70,7 @@ export function Footer(props) {
         <View style={styles.footer}>
             <Text style={[text.small, text.white]}>
                 {props.message}
-                <Text onPress={() => props.navigation.push(props.to)}
+                <Text onPress={() => props.navigation.navigate(props.to)}
                       style={[text.white, text.smallBold]}> {props.action}</Text>
             </Text>
         </View>

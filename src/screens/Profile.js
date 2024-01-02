@@ -1,4 +1,14 @@
-import {Button, Text, View, Image, Pressable, ScrollView, SafeAreaView, StatusBar} from "react-native";
+import {
+    Button,
+    Text,
+    View,
+    Image,
+    Pressable,
+    ScrollView,
+    SafeAreaView,
+    StatusBar,
+    TouchableOpacity
+} from "react-native";
 import {useRecoilState} from "recoil";
 import {authState} from "../js/recoil";
 import styles from "../styles/modules/Profile.module.css";
@@ -59,14 +69,14 @@ export default function ProfileScreen(props) {
                     </View>
 
                     <View style={styles.socialInfo}>
-                        <Pressable style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
                             <Image source={circles} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>7 Circles</Text>
-                        </Pressable>
-                        <Pressable style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
                             <Image source={followers} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>185 Friends</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.optionContainer}>
@@ -136,14 +146,14 @@ export function OtherProfileScreen(props) {
                     </View>
 
                     <View style={styles.socialInfo}>
-                        <Pressable style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
                             <Image source={circles} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>7 Circles</Text>
-                        </Pressable>
-                        <Pressable style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
                             <Image source={followers} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>185 Friends</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
             </SafeAreaView>

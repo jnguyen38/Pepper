@@ -1,4 +1,14 @@
-import {PixelRatio, Platform, StyleSheet, SafeAreaView, StatusBar, View, Image, Pressable} from "react-native";
+import {
+    PixelRatio,
+    Platform,
+    StyleSheet,
+    SafeAreaView,
+    StatusBar,
+    View,
+    Image,
+    Pressable,
+    TouchableOpacity
+} from "react-native";
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
@@ -26,13 +36,13 @@ export function nFormatter(num, digits) {
 
 export function BackButton(props) {
     return (
-        <Pressable style={[styles.backArrowHolder,
+        <TouchableOpacity style={[styles.backArrowHolder,
             {
                 backgroundColor: props.transparent ? "transparent" : props.light ? "#ffffffcc" : "#6464f6cc",
                 top: props.safeView ? 65 : 25
             }]}
-                   onPress={() => props.navigation.goBack()}>
+                   onPress={() => props.navigation.goBack()} activeOpacity={0.5}>
             <Image source={props.light ? backArrowPurple : backArrow} style={[styles.backArrow]}/>
-        </Pressable>
+        </TouchableOpacity>
     )
 }

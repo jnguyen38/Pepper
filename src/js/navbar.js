@@ -1,4 +1,4 @@
-import {View, Text, Image, Pressable} from "react-native";
+import {View, Text, Image, Pressable, TouchableOpacity} from "react-native";
 import styles from "../styles/modules/Navbar.module.css";
 
 import home from "../../assets/navbar/home-black.png";
@@ -14,6 +14,8 @@ import profilePurple from "../../assets/navbar/profile-purple.png";
 
 import {useRecoilState} from "recoil";
 import {tabState} from "./recoil";
+
+const OPACITY = 0.5;
 
 export default function NavBar(props) {
     const [tab, setTab] = useRecoilState(tabState);
@@ -31,28 +33,28 @@ export default function NavBar(props) {
 
     return (
         <View style={styles.navbar}>
-            <Pressable style={styles.navItem}
+            <TouchableOpacity style={styles.navItem} activeOpacity={OPACITY}
                        onPress={() => updateTab(0)}>
                 <Image source={tab === 0 ? homePurple : home} style={[{width: 20, height: 20}, styles.icon]}/>
-            </Pressable>
-            <Pressable style={styles.navItem}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem} activeOpacity={OPACITY}
                        onPress={() => updateTab(1)}>
                 <Image source={tab === 1 ? searchPurple : search} style={[{width: 30, height: 30}, styles.icon]}/>
-            </Pressable>
+            </TouchableOpacity>
             <View style={styles.navItem}>
-                <Pressable style={styles.add}
+                <TouchableOpacity style={styles.add} activeOpacity={0.8}
                            onPress={() => updateTab(2)}>
                     <Image source={tab === 2 ? addPurple : add} style={[{width: 25, height: 25}, styles.icon]}/>
-                </Pressable>
+                </TouchableOpacity>
             </View>
-            <Pressable style={styles.navItem}
+            <TouchableOpacity style={styles.navItem} activeOpacity={OPACITY}
                        onPress={() => updateTab(3)}>
                 <Image source={tab === 3 ? groupPurple : group} style={[{width: 35, height: 35}, styles.icon]}/>
-            </Pressable>
-            <Pressable style={styles.navItem}
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.navItem} activeOpacity={OPACITY}
                        onPress={() => updateTab(4)}>
                 <Image source={tab === 4 ? profilePurple : profile} style={[{width: 30, height: 30}, styles.icon]}/>
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }
