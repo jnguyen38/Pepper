@@ -1,4 +1,4 @@
-import {Image, Pressable, ScrollView, StatusBar, Text, View} from "react-native";
+import {Image, Pressable, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";
@@ -131,14 +131,15 @@ function Content(props) {
         <View style={styles.members}>
             {members.map((member, index) =>
                 <View style={styles.member} key={index}>
-                    <Pressable style={styles.toProfile}
-                               onPress={() => props.navigation.push("OtherProfile", member)}>
+                    <TouchableOpacity style={styles.toProfile}
+                                      activeOpacity={0.8}
+                                      onPress={() => props.navigation.push("OtherProfile", member)}>
                         <Image source={mockPicture} style={styles.profilePic}/>
                         <View style={styles.textHolder}>
                             <Text style={[text.h4, text.pepper]}>{member.name}</Text>
                             <Text style={[text.p, text.grey]}>{member.username}</Text>
                         </View>
-                    </Pressable>
+                    </TouchableOpacity>
                     {
                         member.friend ? (
                             <View style={styles.friend}>

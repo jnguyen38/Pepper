@@ -6,13 +6,16 @@ import ProfileScreen, {OtherProfileScreen} from "../screens/main/Profile";
 import HomeScreen from "../screens/main/Home";
 import CircleInfoScreen from "../screens/CircleInfo";
 import MembersScreen from "../screens/Members";
+import EventsList from "../screens/Events";
 
 export function HomeTab(props) {
     const {Navigator, Screen} = createNativeStackNavigator();
 
     return (
-        <Navigator style={{width: "100%", height: "100%"}}>
+        <Navigator style={{width: "100%", height: "100%"}}
+                   screenOptions={{headerShown: false}}>
             <Screen name={"Home"} component={HomeScreen}/>
+            <Screen name={"EventsList"} component={EventsList}/>
         </Navigator>
     )
 }
@@ -50,6 +53,7 @@ export function CirclesTab(props) {
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
             <Screen name={"MembersList"} component={MembersScreen}/>
             <Screen name={"OtherProfile"} component={OtherProfileScreen}/>
+            <Screen name={"EventsList"} component={EventsList}/>
         </Navigator>
     )
 }

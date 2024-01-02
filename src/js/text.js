@@ -23,6 +23,10 @@ module.exports = StyleSheet.create({
         fontSize: getFont(16),
         fontFamily: 'Epilogue-Medium'
     },
+    pLarge: {
+        fontSize: getFont(16),
+        fontFamily: 'Epilogue-Light',
+    },
     p: {
         fontSize: getFont(14),
         fontFamily: 'Epilogue-Light',

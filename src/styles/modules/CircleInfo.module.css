@@ -10,7 +10,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-bottom: 50px;
+    padding-bottom: 75px;
 }
 
 .backgroundImage {
@@ -22,7 +22,6 @@
 
 .infoContainer {
     width: 100%;
-    height: 1000px;
     background-color: white;
     position: relative;
     border-radius: 20px;
@@ -56,9 +55,19 @@
     height: 50px;
 }
 
+.description {
+    width: 100%;
+    border-bottom-width: 1px;
+    border-bottom-color: #6464f644;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 15px;
+    gap: 10px;
+}
+
 .posts {
     width: 100%;
-    height: auto;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -116,4 +125,38 @@
 .backArrow {
     width: 25px;
     height: 25px;
+}
+
+
+.manageGradient {
+    width: 100%;
+    height: auto;
+    border-bottom-color: #6464f644;
+    border-bottom-width: 1px;
+    position: relative;
+}
+
+.manage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 20px 15px;
+    z-index: 10;
+}
+
+.manageLine {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
+
+.manageIcon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    transform: translateY(-2px);
 }

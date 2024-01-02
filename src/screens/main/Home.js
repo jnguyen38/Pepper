@@ -1,29 +1,34 @@
 import root from "../../styles/Root.module.css";
 import styles from "../../styles/modules/main/Home.module.css"
 import text from "../../js/text";
-import {StatusBar, Text, View} from "react-native";
+import {StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {useRecoilState} from "recoil";
 import {locationState} from "../../js/recoil";
 import {LinearGradient} from "expo-linear-gradient";
 import MapView from "react-native-maps";
-import {FocusAwareStatusBar} from "../../js/util";
+import {CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
 
 export default function HomeScreen(props) {
 
     return (
-        <View style={styles.homeContainer}>
-            <View style={styles.upcoming}>
-                <LinearGradient colors={['#3971f6', '#9028cc']}
-                                start={{x: 1, y: 1}}
-                                end={{x: 0, y: 0}}
-                                style={[root.linearBackground, root.rounded10]}/>
-                <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
+        <View style={root.statusBar}>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
 
-                <Text style={[text.h1, text.white]}>Your events</Text>
-                <Text style={[text.p, text.white]}>See what's coming up next</Text>
-            </View>
+            <CustomSafeAreaView>
+                <View style={styles.homeContainer}>
+                    <TouchableOpacity style={styles.upcoming} activeOpacity={0.8}
+                                      onPress={() => props.navigation.push("EventsList")}>
+                        <LinearGradient colors={['#3971f6', '#9028cc']}
+                                        start={{x: 1, y: 1}}
+                                        end={{x: 0, y: 0}}
+                                        style={[root.linearBackground, root.rounded10]}/>
 
-            <Map/>
+                        <Text style={[text.h1, text.white]}>Your events</Text>
+                        <Text style={[text.p, text.white]}>See what's coming up next</Text>
+                    </TouchableOpacity>
+                    <Map/>
+                </View>
+            </CustomSafeAreaView>
         </View>
     )
 }

@@ -26,7 +26,8 @@ const circles = [
         title: "Pickup Soccer",
         members: 22,
         id: 0,
-        background: pickupSoccer
+        background: pickupSoccer,
+        description: "A circle for random pickup games at Ricci Fields"
     },
     {
         title: "Bengal Bouts",
