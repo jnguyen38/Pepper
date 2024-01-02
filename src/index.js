@@ -1,10 +1,10 @@
 import {NavigationContainer} from "@react-navigation/native";
-import LoginScreen from "./screens/Login";
+import LoginScreen from "./screens/auth/Login";
 import {useRecoilState} from "recoil";
 import {authState, locationState, statusBarTheme, tabState} from "./js/recoil";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import ForgotPasswordScreen from "./screens/ForgotPassword";
-import SignUpScreen from "./screens/SignUp";
+import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
+import SignUpScreen from "./screens/auth/SignUp";
 import {StatusBar, View} from "react-native";
 import NavBar from "./js/navbar";
 import React, {useEffect} from "react";

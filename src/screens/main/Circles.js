@@ -9,16 +9,16 @@ import {
     View
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
-import text from "../js/text";
-import styles from "../styles/modules/Circles.module.css";
-import root from "../styles/Root.module.css";
-import bengalBouts from "../../assets/bengalBouts.jpeg";
-import pickupSoccer from "../../assets/pickupSoccer.webp";
-import sibc from "../../assets/sibc.webp";
-import rugby from "../../assets/rugby.png";
-import engineers from "../../assets/engineers.jpeg";
-import climb from "../../assets/climb.jpeg";
-import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, nFormatter} from "../js/util";
+import text from "../../js/text";
+import styles from "../../styles/modules/main/Circles.module.css";
+import root from "../../styles/Root.module.css";
+import bengalBouts from "../../../assets/bengalBouts.jpeg";
+import pickupSoccer from "../../../assets/pickupSoccer.webp";
+import sibc from "../../../assets/sibc.webp";
+import rugby from "../../../assets/rugby.png";
+import engineers from "../../../assets/engineers.jpeg";
+import climb from "../../../assets/climb.jpeg";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, nFormatter} from "../../js/util";
 import {useEffect} from "react";
 
 const circles = [

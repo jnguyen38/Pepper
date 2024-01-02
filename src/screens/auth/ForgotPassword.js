@@ -2,10 +2,10 @@ import {Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, View, Im
 import {LinearGradient} from "expo-linear-gradient";
 import {Footer} from "./Login";
 
-import lock from "../../assets/forgot-password.png";
-import styles from "../styles/modules/Auth.module.css";
-import root from "../styles/Root.module.css";
-import text from "../js/text";
+import lock from "../../../assets/forgot-password.png";
+import styles from "../../styles/modules/auth/Auth.module.css";
+import root from "../../styles/Root.module.css";
+import text from "../../js/text";
 
 export default function ForgotPasswordScreen(props) {
     return (

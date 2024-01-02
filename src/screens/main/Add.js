@@ -1,8 +1,8 @@
 import {Dimensions, Text, TextInput, View} from "react-native";
-import text from "../js/text";
-import styles from "../styles/modules/Add.module.css";
-import root from "../styles/Root.module.css";
-import {CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
+import text from "../../js/text";
+import styles from "../../styles/modules/main/Add.module.css";
+import root from "../../styles/Root.module.css";
+import {CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 import Animated, {
     Extrapolate,

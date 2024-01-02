@@ -1,12 +1,12 @@
-import root from "../styles/Root.module.css";
-import styles from "../styles/modules/Home.module.css"
-import text from "../js/text";
+import root from "../../styles/Root.module.css";
+import styles from "../../styles/modules/main/Home.module.css"
+import text from "../../js/text";
 import {StatusBar, Text, View} from "react-native";
 import {useRecoilState} from "recoil";
-import {locationState} from "../js/recoil";
+import {locationState} from "../../js/recoil";
 import {LinearGradient} from "expo-linear-gradient";
 import MapView from "react-native-maps";
-import {FocusAwareStatusBar} from "../js/util";
+import {FocusAwareStatusBar} from "../../js/util";
 
 export default function HomeScreen(props) {
 

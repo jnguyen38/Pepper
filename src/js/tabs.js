@@ -1,9 +1,9 @@
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import AddScreen from "../screens/Add";
-import SearchScreen from "../screens/Search";
-import ExploreCircleScreen, {CircleScreen} from "../screens/Circles";
-import ProfileScreen, {OtherProfileScreen} from "../screens/Profile";
-import HomeScreen from "../screens/Home";
+import AddScreen from "../screens/main/Add";
+import SearchScreen from "../screens/main/Search";
+import ExploreCircleScreen, {CircleScreen} from "../screens/main/Circles";
+import ProfileScreen, {OtherProfileScreen} from "../screens/main/Profile";
+import HomeScreen from "../screens/main/Home";
 import CircleInfoScreen from "../screens/CircleInfo";
 import MembersScreen from "../screens/Members";
 

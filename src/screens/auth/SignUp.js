@@ -3,11 +3,11 @@ import {LinearGradient} from "expo-linear-gradient";
 import {useState} from "react";
 import {Footer, Or} from "./Login";
 
-import styles from "../styles/modules/Auth.module.css";
-import root from "../styles/Root.module.css";
-import text from "../js/text";
-import google from "../../assets/providers/googleNeutralSU.png";
-import pepperWhite from "../../assets/brand/Pepper-Big-Logo-White.png";
+import styles from "../../styles/modules/auth/Auth.module.css";
+import root from "../../styles/Root.module.css";
+import text from "../../js/text";
+import google from "../../../assets/providers/googleNeutralSU.png";
+import pepperWhite from "../../../assets/brand/Pepper-Big-Logo-White.png";
 
 export default function SignUpScreen(props) {
     const [hidePass, setHidePass] = useState(true)

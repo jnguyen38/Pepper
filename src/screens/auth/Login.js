@@ -2,13 +2,13 @@ import {Image, Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, V
 import {LinearGradient} from "expo-linear-gradient";
 import {useState} from "react";
 import {useRecoilState} from "recoil";
-import {authState, tabState} from "../js/recoil";
+import {authState, tabState} from "../../js/recoil";
 
-import pepperWhite from "../../assets/brand/Pepper-Big-Logo-White.png";
-import google from "../../assets/providers/googleNeutralSI.png";
-import text from "../js/text";
-import styles from "../styles/modules/Auth.module.css";
-import root from "../styles/Root.module.css";
+import pepperWhite from "../../../assets/brand/Pepper-Big-Logo-White.png";
+import google from "../../../assets/providers/googleNeutralSI.png";
+import text from "../../js/text";
+import styles from "../../styles/modules/auth/Auth.module.css";
+import root from "../../styles/Root.module.css";
 
 export default function LoginScreen(props) {
     const [hidePass, setHidePass] = useState(true)

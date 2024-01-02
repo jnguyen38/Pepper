@@ -91,6 +91,51 @@ const postData = [
                 body: "No!"
             }
         ]
+    },
+    {
+        author: "Jon Nguyen",
+        time: "11:16 AM",
+        title: "Thoughts on a chess tournament?",
+        body: "I have been an avi supporter of Futsal leagues from a young" +
+            "age and was wondering if anyone shared a similar passion. I would" +
+            "be very interested in starting a league!",
+        replies: [
+            {
+                author: "Ryan O'Halloran",
+                time: "1:30 PM",
+                body: "No!"
+            }
+        ]
+    },
+    {
+        author: "Jon Nguyen",
+        time: "11:16 AM",
+        title: "Thoughts on a chess tournament?",
+        body: "I have been an avi supporter of Futsal leagues from a young" +
+            "age and was wondering if anyone shared a similar passion. I would" +
+            "be very interested in starting a league!",
+        replies: [
+            {
+                author: "Ryan O'Halloran",
+                time: "1:30 PM",
+                body: "No!"
+            }
+        ]
+    },
+    {
+        author: "Jon Nguyen",
+        time: "11:16 AM",
+        title: "Thoughts on a chess tournament?",
+        body: "I have been an avi supporter of Futsal leagues from a young" +
+            "age and was wondering if anyone shared a similar passion. I would" +
+            "be very interested in starting a league!",
+        replies: [
+            {
+                author: "Ryan O'Halloran",
+                time: "1:30 PM",
+                body: "No!"
+            }
+        ]
     }
 ]
 
@@ -125,6 +170,7 @@ export default function CircleInfoScreen(props) {
             <FocusAwareStatusBar barStyle={"dark-content"} hidden={true} animated={false}/>
 
             <Animated.ScrollView ref={scrollRef}
+                                 contentContainerStyle={styles.scrollView}
                                  showsVerticalScrollIndicator={false}
                                  scrollEventThrottle={16}>
 
@@ -141,7 +187,6 @@ export default function CircleInfoScreen(props) {
                 </Animated.View>
 
                 <View style={styles.infoContainer}>
-                    <View style={styles.info}>
                         <View style={styles.socialInfo}>
                             <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
                                               onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
@@ -160,8 +205,10 @@ export default function CircleInfoScreen(props) {
                             <Text style={[text.h2, text.pepper]}>Recent Posts</Text>
                             {postData.map((post, index) =>
                                 <Pressable key={index} style={styles.post}>
-                                    <Text style={[text.small, text.black]}>{post.author}</Text>
-                                    <Text style={[text.h3, text.pepper]}>{post.title}</Text>
+                                    <View style={styles.postText}>
+                                        <Text style={[text.small, text.black]}>{post.author}</Text>
+                                        <Text style={[text.h3, text.pepper]}>{post.title}</Text>
+                                    </View>
                                     <View style={styles.replies}>
                                         <Image source={reply} style={styles.replyIcon}/>
                                         <Text style={[text.fineBold, text.white]}>{post.replies.length} {post.replies.length === 1 ? "Reply" : "Replies"}</Text>
@@ -169,7 +216,6 @@ export default function CircleInfoScreen(props) {
                                 </Pressable>
                             )}
                         </View>
-                    </View>
                 </View>
             </Animated.ScrollView>
         </View>
