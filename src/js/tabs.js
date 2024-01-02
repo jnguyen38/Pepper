@@ -21,7 +21,8 @@ export function SearchTab(props) {
     const {Navigator, Screen} = createNativeStackNavigator();
 
     return (
-        <Navigator style={{width: "100%", height: "100%"}}>
+        <Navigator style={{width: "100%", height: "100%"}}
+                   screenOptions={{headerShown: false}}>
             <Screen name={"Home"} component={SearchScreen}/>
         </Navigator>
     )

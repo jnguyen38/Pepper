@@ -1,4 +1,13 @@
-import {Image, SafeAreaView, ScrollView, Text, TouchableHighlight, TouchableOpacity, View} from "react-native";
+import {
+    Image,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    Text,
+    TouchableHighlight,
+    TouchableOpacity,
+    View
+} from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import text from "../js/text";
 import styles from "../styles/modules/Circles.module.css";
@@ -53,6 +62,7 @@ const circles = [
 export default function ExploreCircleScreen(props) {
     return (
         <View style={root.statusBar}>
+            <StatusBar barStyle={"dark-content"}/>
             <SafeAreaView>
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}
