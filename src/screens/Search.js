@@ -3,7 +3,7 @@ import root from "../styles/Root.module.css";
 import styles from "../styles/modules/Search.module.css";
 import text from "../js/text";
 import {LinearGradient} from "expo-linear-gradient";
-import {CustomSafeAreaView} from "../js/util";
+import {CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
 import {SearchBar} from "react-native-elements";
 import {useState} from "react";
 import clear from "../../assets/x-white.png";
@@ -27,7 +27,9 @@ export default function SearchScreen(props) {
                             start={{x:1, y:0.6}}
                             end={{x:0, y:0.4}}
                             style={root.linearBackground}/>
-            <StatusBar barStyle={"light-content"}/>
+            <FocusAwareStatusBar barStyle={"light-content"} hidden={false} animated={true}/>
+
+
             <CustomSafeAreaView>
                 <View style={styles.container}>
                     <SearchBar containerStyle={styles.searchContainer}

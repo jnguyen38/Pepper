@@ -1,7 +1,7 @@
 import {NavigationContainer} from "@react-navigation/native";
 import LoginScreen from "./screens/Login";
 import {useRecoilState} from "recoil";
-import {authState, locationState} from "./js/recoil";
+import {authState, locationState, statusBarTheme, tabState} from "./js/recoil";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/ForgotPassword";
 import SignUpScreen from "./screens/SignUp";
@@ -19,6 +19,7 @@ const {Navigator, Screen} = createNativeStackNavigator();
 export default function Index() {
     const [auth] = useRecoilState(authState);
     const [location, setLocation] = useRecoilState(locationState);
+    const [tab] = useRecoilState(tabState);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     useEffect(() => {
@@ -38,10 +39,8 @@ export default function Index() {
         getLocation().then();
     }, [])
 
-
     return auth ? (
         <NavigationContainer>
-            <StatusBar barStyle={"dark-content"} />
             <View style={{height: "100%", width: "100%"}}>
                 <Tab.Navigator style={{height: "100%", width: "100%"}}
                                tabBar={props => (<NavBar tabs={tabs} {...props}/>)}

@@ -1,9 +1,10 @@
-import {Image, Pressable, ScrollView, Text, View} from "react-native";
+import {Image, Pressable, ScrollView, StatusBar, Text, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";
 import mockPicture from "../../assets/brand/pepper-purple-app-icon.png";
-import {BackButton, CustomSafeAreaView} from "../js/util";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
+import {useEffect} from "react";
 
 const members = [
     {
@@ -106,6 +107,8 @@ const members = [
 export default function MembersScreen(props) {
     return (
         <View style={root.statusBar}>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
+
             <CustomSafeAreaView>
                 <BackButton transparent={true} light={true} safeView={true} {...props}/>
 

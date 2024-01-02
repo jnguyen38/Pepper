@@ -1,13 +1,13 @@
-import {Dimensions, StatusBar, Text, TextInput, View, Image} from "react-native";
+import {Dimensions, Text, TextInput, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/Add.module.css";
 import root from "../styles/Root.module.css";
-import {CustomSafeAreaView} from "../js/util";
-import arrow from "../../assets/back-arrow.png"
+import {CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 import Animated, {
     Extrapolate,
-    interpolate, interpolateColor,
+    interpolate,
+    interpolateColor,
     useAnimatedRef,
     useAnimatedStyle,
     useScrollViewOffset
@@ -28,7 +28,9 @@ export default function AddScreen(props) {
                             start={{x:0, y:0.6}}
                             end={{x:1, y:0.4}}
                             style={root.linearBackground}/>
-            <StatusBar barStyle={"light-content"}/>
+            <FocusAwareStatusBar barStyle={"light-content"} hidden={false} animated={true}/>
+
+
             <CustomSafeAreaView>
                 <View style={styles.container}>
                     <Animated.ScrollView contentContainerStyle={styles.scrollView}

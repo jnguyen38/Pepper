@@ -1,7 +1,7 @@
 import {Image, Pressable, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {useRecoilState} from "recoil";
 import {authState} from "../js/recoil";
-import {BackButton, CustomSafeAreaView} from "../js/util";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 
 import styles from "../styles/modules/Profile.module.css";
@@ -24,6 +24,8 @@ export default function ProfileScreen(props) {
 
     return (
         <View style={[root.statusBar]}>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
+
             <SafeAreaView>
                 <ScrollView contentContainerStyle={styles.profileContainer}
                             showsVerticalScrollIndicator={false}
@@ -97,6 +99,8 @@ export default function ProfileScreen(props) {
 export function OtherProfileScreen(props) {
     return (
         <View style={[root.statusBar]}>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
+
             <CustomSafeAreaView>
                 <BackButton safeView={true} {...props}/>
 

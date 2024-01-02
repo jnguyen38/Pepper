@@ -18,7 +18,8 @@ import sibc from "../../assets/sibc.webp";
 import rugby from "../../assets/rugby.png";
 import engineers from "../../assets/engineers.jpeg";
 import climb from "../../assets/climb.jpeg";
-import {BackButton, CustomSafeAreaView, nFormatter} from "../js/util";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, nFormatter} from "../js/util";
+import {useEffect} from "react";
 
 const circles = [
     {
@@ -62,7 +63,8 @@ const circles = [
 export default function ExploreCircleScreen(props) {
     return (
         <View style={root.statusBar}>
-            <StatusBar barStyle={"dark-content"}/>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
+
             <SafeAreaView>
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}

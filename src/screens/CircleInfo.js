@@ -1,4 +1,4 @@
-import {Image, Pressable, StatusBar, StyleSheet, Text, View} from "react-native";
+import {Image, Pressable, StatusBar, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/CircleInfo.module.css";
 import root from "../styles/Root.module.css";
@@ -7,7 +7,7 @@ import {LinearGradient} from "expo-linear-gradient";
 import circles from "../../assets/profile/circlesPurple.png";
 import events from "../../assets/events.png";
 import reply from "../../assets/reply.png";
-import {BackButton} from "../js/util";
+import {BackButton, FocusAwareStatusBar} from "../js/util";
 
 const IMG_HEIGHT = 250;
 
@@ -122,6 +122,7 @@ export default function CircleInfoScreen(props) {
     return (
         <View style={styles.screen}>
             <BackButton {...props}/>
+            <FocusAwareStatusBar barStyle={"dark-content"} hidden={true} animated={false}/>
 
             <Animated.ScrollView ref={scrollRef}
                                  showsVerticalScrollIndicator={false}
@@ -142,16 +143,17 @@ export default function CircleInfoScreen(props) {
                 <View style={styles.infoContainer}>
                     <View style={styles.info}>
                         <View style={styles.socialInfo}>
-                            <Pressable style={styles.socialSection}  onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
+                            <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
+                                              onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
                                 <Image source={circles} style={styles.socialIcon}/>
                                 <Text style={[text.grey, text.h4]}>{props.route.params.members} Members</Text>
                                 <Text style={[text.black, text.small]}>12 Friends</Text>
-                            </Pressable>
-                            <Pressable style={styles.socialSection}>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}>
                                 <Image source={events} style={styles.socialIcon}/>
                                 <Text style={[text.grey, text.h4]}>3 Events</Text>
                                 <Text style={[text.black, text.small]}>1 RSVP</Text>
-                            </Pressable>
+                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.posts}>
@@ -169,8 +171,6 @@ export default function CircleInfoScreen(props) {
                         </View>
                     </View>
                 </View>
-
-                <StatusBar hidden/>
             </Animated.ScrollView>
         </View>
     )

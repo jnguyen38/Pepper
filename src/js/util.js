@@ -1,7 +1,11 @@
-import {Image, PixelRatio, SafeAreaView, TouchableOpacity, View} from "react-native";
+import {Image, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity, View} from "react-native";
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
+import {useRecoilState} from "recoil";
+import {statusBarTheme, tabState} from "./recoil";
+import {useEffect} from "react";
+import {useIsFocused} from "@react-navigation/native";
 
 export function getFont(size) {
     const fontScale = PixelRatio.getFontScale()
@@ -52,4 +56,10 @@ export function Line(props) {
         <View style={{width: "100%", height: 1, backgroundColor: props.color}}/>
     )
 
+}
+
+export function FocusAwareStatusBar(props) {
+    const isFocused = useIsFocused();
+
+    return isFocused ? <StatusBar {...props} /> : null;
 }
