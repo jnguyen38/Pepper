@@ -1,4 +1,4 @@
-import {Image, Pressable, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
+import {Image, Modal, Pressable, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {useRecoilState} from "recoil";
 import {authState} from "../../js/recoil";
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
@@ -18,9 +18,11 @@ import logout from "../../../assets/profile/logout-slim.png";
 import settings from "../../../assets/profile/settings.png";
 import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
+import {useState} from "react";
 
 export default function ProfileScreen(props) {
     const [auth, setAuth] = useRecoilState(authState);
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <View style={[root.statusBar]}>
@@ -73,24 +75,27 @@ export default function ProfileScreen(props) {
                     </View>
 
                     <View style={styles.optionContainer}>
-                        <Pressable style={styles.option}>
+                        <TouchableOpacity style={styles.option} activeOpacity={0.7}>
                             <Image source={terms} style={[{width: 35, height: 25, objectFit: "contain"}]}/>
                             <Text style={[text.h3, text.pepper]}>Terms & Conditions</Text>
-                        </Pressable>
-                        <Pressable style={styles.option}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.option} activeOpacity={0.7}>
                             <Image source={privacy} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Privacy Policy</Text>
-                        </Pressable>
-                        <Pressable style={styles.option}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.option} activeOpacity={0.7}>
                             <Image source={settings} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Settings</Text>
-                        </Pressable>
-                        <Pressable style={[styles.option]} onPress={() => setAuth(false)}>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.option]} activeOpacity={0.5}
+                                          onPress={() => setAuth(false)}>
                             <Image source={logout} style={[{width: 35, height: 25, objectFit: "contain"}]}/>
                             <Text style={[text.h3, text.red]}>Logout</Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
+
+
             </SafeAreaView>
         </View>
     )

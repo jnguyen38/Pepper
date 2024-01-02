@@ -41,6 +41,8 @@ target 'pepper' do
   use_expo_modules!
   config = use_native_modules!
 
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
   use_frameworks! :linkage => podfile_properties['ios.useFrameworks'].to_sym if podfile_properties['ios.useFrameworks']
   use_frameworks! :linkage => ENV['USE_FRAMEWORKS'].to_sym if ENV['USE_FRAMEWORKS']
 
@@ -85,3 +87,19 @@ target 'pepper' do
     end
   end
 end
+
+# Add the Firebase pod for Google Analytics
+pod 'FirebaseAnalytics', :modular_headers => true
+
+# For Analytics without IDFA collection capability, use this pod instead
+# pod 'Firebase/AnalyticsWithoutAdIdSupport'
+
+# Add the pods for any other Firebase products you want to use in your app
+# For example, to use Firebase Authentication and Cloud Firestore
+pod 'FirebaseCore', :modular_headers => true
+pod 'FirebaseCoreExtension', :modular_headers => true
+pod 'FirebaseFirestoreInternal', :modular_headers => true
+pod 'FirebaseAuth', :modular_headers => true
+pod 'GoogleUtilities', :modular_headers => true
+pod 'FirebaseCoreInternal', :modular_headers => true
+pod 'FirebaseFirestore', :modular_headers => true
