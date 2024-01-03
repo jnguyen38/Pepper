@@ -24,14 +24,15 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.pepper",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./server/config/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/pepper-purple-app-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.pepper"
+      "package": "com.anonymous.pepper",
+      "googleServicesFile": "./server/config/google-services.json"
     },
     "web": {
       "favicon": "./assets/brand/pepper-purple-app-icon.png"

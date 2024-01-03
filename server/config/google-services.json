@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "906333431837",
+    "project_id": "pepper-7dc44",
+    "storage_bucket": "pepper-7dc44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:906333431837:android:653b11c9760064b2a5fef4",
+        "android_client_info": {
+          "package_name": "com.pepper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrno9uXUWnsQBtionBwZjezq1MTQv54Wk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
