@@ -8,13 +8,14 @@ import CircleInfoScreen from "../screens/CircleInfo";
 import MembersScreen from "../screens/Members";
 import EventsList from "../screens/Events";
 
-export function HomeTab(props) {
+export function HomeTab({route}) {
     const {Navigator, Screen} = createNativeStackNavigator();
 
     return (
         <Navigator style={{width: "100%", height: "100%"}}
                    screenOptions={{headerShown: false}}>
-            <Screen name={"Home"} component={HomeScreen}/>
+            <Screen name={"Home"} component={HomeScreen}
+                    initialParams={{location: route.params.location}}/>
             <Screen name={"EventsList"} component={EventsList}/>
         </Navigator>
     )

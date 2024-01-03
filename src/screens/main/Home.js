@@ -1,9 +1,7 @@
 import root from "../../styles/Root.module.css";
 import styles from "../../styles/modules/main/Home.module.css"
 import text from "../../js/text";
-import {StatusBar, Text, TouchableOpacity, View} from "react-native";
-import {useRecoilState} from "recoil";
-import {locationState} from "../../js/recoil";
+import {Text, TouchableOpacity, View} from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import MapView from "react-native-maps";
 import {CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
@@ -26,15 +24,15 @@ export default function HomeScreen(props) {
                         <Text style={[text.h1, text.white]}>Your events</Text>
                         <Text style={[text.p, text.white]}>See what's coming up next</Text>
                     </TouchableOpacity>
-                    <Map/>
+                    <Map {...props}/>
                 </View>
             </CustomSafeAreaView>
         </View>
     )
 }
 
-function Map() {
-    const [location] = useRecoilState(locationState);
+function Map(props) {
+    const location = props.route.params.location;
     const NDLoc = {
         latitude: 41.7002,
         longitude: -86.2379,

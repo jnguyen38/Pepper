@@ -1,51 +1,33 @@
 import {NavigationContainer} from "@react-navigation/native";
 import LoginScreen from "./screens/auth/Login";
-import {useRecoilState} from "recoil";
-import {authState, initializingFirebase, locationState, userState} from "./js/recoil";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
 import SignUpScreen from "./screens/auth/SignUp";
-import {StatusBar, View} from "react-native";
+import {StatusBar, Text, View} from "react-native";
 import NavBar from "./js/navbar";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import * as Location from 'expo-location';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {AddTab, CirclesTab, HomeTab, ProfileTab, SearchTab} from "./js/tabs";
-
-// Firebase SDKs and config
-import { initializeApp } from "firebase/app";
-// import { getAnalytics } from "firebase/analytics";
-
-const firebaseConfig = {
-    apiKey: process.env.API_KEY,
-    authDomain: process.env.AUTH_DOMAIN,
-    projectId: process.env.PROJECT_ID,
-    storageBucket: process.env.STORAGE_BUCKET,
-    messagingSenderId: process.env.MESSAGING_SENDER_ID,
-    appId: process.env.APP_ID,
-    measurementId: process.env.MEASUREMENT_ID,
-};
-
+import {onAuthStateChanged} from 'firebase/auth';
+import {auth} from "../server/config/config";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
 
 export default function Index() {
-    const [appAuth] = useRecoilState(authState);
-    const [location, setLocation] = useRecoilState(locationState);
-    const [initializing, setInitializing] = useRecoilState(initializingFirebase);
-    const [user, setUser] = useRecoilState(userState);
+    const [location, setLocation] = useState(null);
+    const [tab, setTab] = useState(0);
+    const [initializing, setInitializing] = useState(true);
+    const [user, setUser] = useState(undefined)
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
-    const app = initializeApp(firebaseConfig);
-    // const analytics = getAnalytics(app);
-
-
-    // Handle user state changes
-    function onAuthStateChanged(user) {
-        setUser(user);
-        if (initializing) setInitializing(false);
-    }
+    const onAuthStateChangedHandler = (newUser) => {
+        setUser(newUser)
+        if (initializing) {
+            setInitializing(false);
+        }
+    };
 
     useEffect(() => {
         async function getLocation() {
@@ -57,22 +39,33 @@ export default function Index() {
             }
 
             let loc = await Location.getCurrentPositionAsync();
-            console.log(loc)
             setLocation(loc)
         }
 
         getLocation().then();
+
+        return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
 
+    if (initializing) {
+        return (
+            <View style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
-    return appAuth ? (
+    return user ? (
         <NavigationContainer>
             <View style={{height: "100%", width: "100%"}}>
                 <Tab.Navigator style={{height: "100%", width: "100%"}}
-                               tabBar={props => (<NavBar tabs={tabs} {...props}/>)}
+                               tabBar={props => (
+                                   <NavBar tab={tab} setTab={setTab} tabs={tabs} {...props}/>
+                               )}
                                screenOptions={{headerShown: false}}>
                     <Tab.Screen name={tabs[0]}
-                                component={HomeTab}/>
+                                component={HomeTab}
+                                initialParams={{location: location}}/>
                     <Tab.Screen name={tabs[1]}
                                 component={SearchTab}/>
                     <Tab.Screen name={tabs[2]}

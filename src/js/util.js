@@ -2,9 +2,6 @@ import {Image, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity, View} from
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
-import {useRecoilState} from "recoil";
-import {statusBarTheme, tabState} from "./recoil";
-import {useEffect} from "react";
 import {useIsFocused} from "@react-navigation/native";
 
 export function getFont(size) {

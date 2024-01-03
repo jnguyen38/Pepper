@@ -1,6 +1,4 @@
-import {Image, Modal, Pressable, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
-import {useRecoilState} from "recoil";
-import {authState} from "../../js/recoil";
+import {Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 
@@ -19,10 +17,17 @@ import settings from "../../../assets/profile/settings.png";
 import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
 import {useState} from "react";
+import {logoutFirebase} from "../../../server/auth";
 
 export default function ProfileScreen(props) {
-    const [auth, setAuth] = useRecoilState(authState);
     const [showModal, setShowModal] = useState(false);
+
+    function handleLogout() {
+        logoutFirebase().then(() => {
+        }).catch(err => {
+            console.warn(err);
+        });
+    }
 
     return (
         <View style={[root.statusBar]}>
@@ -88,7 +93,7 @@ export default function ProfileScreen(props) {
                             <Text style={[text.h3, text.pepper]}>Settings</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.option]} activeOpacity={0.5}
-                                          onPress={() => setAuth(false)}>
+                                          onPress={handleLogout}>
                             <Image source={logout} style={[{width: 35, height: 25, objectFit: "contain"}]}/>
                             <Text style={[text.h3, text.red]}>Logout</Text>
                         </TouchableOpacity>

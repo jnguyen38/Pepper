@@ -1,7 +1,6 @@
 import fonts from "./src/js/fonts";
 import {Text} from "react-native";
 import {useFonts} from "expo-font";
-import {RecoilRoot} from "recoil";
 import Index from "./src";
 import {Provider} from "react-native-paper"
 
@@ -15,10 +14,8 @@ export default function App() {
     }
 
     return (
-        <RecoilRoot>
-            <Provider>
-                <Index/>
-            </Provider>
-        </RecoilRoot>
+        <Provider>
+            <Index/>
+        </Provider>
     );
 }
