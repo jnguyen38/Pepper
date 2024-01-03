@@ -14,3 +14,13 @@ export const locationState = atom({
     key: 'location',
     default: {}
 });
+
+export const initializingFirebase = atom({
+    key: 'initializing',
+    default: true
+});
+
+export const userState = atom({
+    key: 'user',
+    default: null
+});

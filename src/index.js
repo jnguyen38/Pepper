@@ -1,7 +1,7 @@
 import {NavigationContainer} from "@react-navigation/native";
 import LoginScreen from "./screens/auth/Login";
 import {useRecoilState} from "recoil";
-import {authState, locationState, statusBarTheme, tabState} from "./js/recoil";
+import {authState, initializingFirebase, locationState, userState} from "./js/recoil";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
 import SignUpScreen from "./screens/auth/SignUp";
@@ -12,15 +12,40 @@ import * as Location from 'expo-location';
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {AddTab, CirclesTab, HomeTab, ProfileTab, SearchTab} from "./js/tabs";
 
+// Firebase SDKs and config
+import { initializeApp } from "firebase/app";
+// import { getAnalytics } from "firebase/analytics";
+
+const firebaseConfig = {
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASUREMENT_ID,
+};
+
+
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
-const {Navigator, Screen} = createNativeStackNavigator();
 
 export default function Index() {
-    const [auth] = useRecoilState(authState);
+    const [appAuth] = useRecoilState(authState);
     const [location, setLocation] = useRecoilState(locationState);
-    const [tab] = useRecoilState(tabState);
+    const [initializing, setInitializing] = useRecoilState(initializingFirebase);
+    const [user, setUser] = useRecoilState(userState);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
+
+    const app = initializeApp(firebaseConfig);
+    // const analytics = getAnalytics(app);
+
+
+    // Handle user state changes
+    function onAuthStateChanged(user) {
+        setUser(user);
+        if (initializing) setInitializing(false);
+    }
 
     useEffect(() => {
         async function getLocation() {
@@ -39,7 +64,8 @@ export default function Index() {
         getLocation().then();
     }, [])
 
-    return auth ? (
+
+    return appAuth ? (
         <NavigationContainer>
             <View style={{height: "100%", width: "100%"}}>
                 <Tab.Navigator style={{height: "100%", width: "100%"}}
