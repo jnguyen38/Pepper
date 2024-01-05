@@ -59,7 +59,7 @@
     color: white;
 }
 
-.loginButton {
+.authButton {
     width: 80%;
     height: 50px;
     border-radius: 5px;
@@ -181,4 +181,10 @@
 
 .errorBorder {
     border: 1px solid red;
+}
+
+.verifyButton {
+    background-color: #ffffff44;
+    border: 1px #ffffff44 solid;
+    margin-top: 5px;
 }

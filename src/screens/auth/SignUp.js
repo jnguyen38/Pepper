@@ -29,6 +29,8 @@ export default function SignUpScreen(props) {
     const [disabled, setDisabled] = useState(true);
     const [passMatch, setPassMatch] = useState(true);
     const [passLength, setPassLength] = useState(false);
+    const [usernameTooLong, setUsernameTooLong] = useState(false);
+    const [invalidChars, setInvalidChars] = useState(false);
     const [error, setError] = useState(undefined);
     const [userError, setUserError] = useState(undefined);
     const [emailError, setEmailError] = useState(undefined);
@@ -46,7 +48,28 @@ export default function SignUpScreen(props) {
         setPassError(err)
     }
 
+    function checkUsername(user) {
+        let tempUserError = undefined;
+        let tempInvalidChars = false;
+        let tempUsernameTooLong = false;
+
+        if (!(/^[A-Za-z][A-Za-z0-9_]+$/.test(user))) {
+            tempUserError = "Username can only include letters, numbers, and underscores"
+            tempInvalidChars = true;
+        }
+
+        if (user.length > 30) {
+            tempUserError = "Username must be less than 30 characters"
+            tempUsernameTooLong = true;
+        }
+
+        setUserError(tempUserError)
+        setInvalidChars(tempInvalidChars)
+        setUsernameTooLong(tempUsernameTooLong)
+    }
+
     const debouncedCheckPassword = useCallback(debounce(checkPassword, 500), []);
+    const debouncedCheckUsername = useCallback(debounce(checkUsername, 500), []);
 
     async function handleSignUp() {
         setLoading(true);
@@ -80,7 +103,7 @@ export default function SignUpScreen(props) {
     }
 
     useEffect(() => {
-        setDisabled(!email || !password || !confirm || !username || !passMatch || !passLength);
+        setDisabled(!email || !password || !confirm || !username || !passMatch || !passLength || usernameTooLong || invalidChars);
     }, [email, password, confirm, username, passMatch])
 
     useEffect(() => {
@@ -93,7 +116,11 @@ export default function SignUpScreen(props) {
     }, [passMatch, password, confirm])
 
     useEffect(() => {
-        setUserError(undefined)
+        if (username) {
+            debouncedCheckUsername(username);
+        } else {
+            setUserError(undefined)
+        }
     }, [username])
 
     useEffect(() => {
@@ -153,7 +180,7 @@ export default function SignUpScreen(props) {
                                    secureTextEntry={true}/>
                         {passError ? <Error error={passError} setError={setPassError}/> : null}
                         {error ? <Error error={error} setError={setError}/> : null}
-                        <TouchableOpacity style={[styles.loginButton, disabled ? styles.disabledButton : styles.activeButton]}
+                        <TouchableOpacity style={[styles.authButton, disabled ? styles.disabledButton : styles.activeButton]}
                                           activeOpacity={0.5} disabled={disabled}
                                           onPress={handleSignUp}>
                             {loading ? (

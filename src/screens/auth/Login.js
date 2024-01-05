@@ -1,4 +1,5 @@
 import {
+    ActivityIndicator,
     Animated as RNAnimated,
     Easing,
     Image,
@@ -19,7 +20,7 @@ import google from "../../../assets/providers/googleNeutralSI.png";
 import text from "../../js/text";
 import styles from "../../styles/modules/auth/Auth.module.css";
 import root from "../../styles/Root.module.css";
-import {emailVerification, getUser, login} from "../../../server/auth";
+import {emailVerification, login} from "../../../server/auth";
 import {auth} from "../../../server/config/config";
 import * as Linking from "expo-linking";
 
@@ -29,22 +30,33 @@ export default function LoginScreen(props) {
     const [password, setPassword] = useState("");
     const [error, setError] = useState(undefined);
     const [disabled, setDisabled] = useState(true);
+    const [emailError, setEmailError] = useState(false);
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         setDisabled(!email.length || !password.length)
     }, [email, password])
 
+    useEffect(() => {
+        setEmailError(false)
+    }, [email])
+
     async function handleLogin() {
+        setLoading(true)
         login(email, password).then(async () => {
             const currUser = auth.currentUser;
 
             if (currUser && !currUser.emailVerified) {
                 await emailVerification();
             }
+            setLoading(false)
         }).catch(err => {
+            setLoading(false)
             setError(undefined)
             if (err.code === "auth/invalid-email") {
                 setError("Please enter a valid email address");
+                setEmailError(true)
             } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password"  || err.code === "auth/invalid-credential") {
                 setError("Invalid email or password");
             } else if (err.code === "auth/too-many-requests") {
@@ -73,7 +85,7 @@ export default function LoginScreen(props) {
 
                 <Image source={pepperWhite} style={[styles.logo]}/>
                 <View style={styles.loginForm}>
-                    <TextInput style={[styles.input, text.p]}
+                    <TextInput style={[styles.input, text.p, emailError ? styles.errorBorder : null]}
                                keyboardAppearance={'dark'}
                                placeholder={"Email"}
                                placeholderTextColor={"#ffffff88"}
@@ -94,9 +106,13 @@ export default function LoginScreen(props) {
 
                     {error ? <Error error={error} setError={setError}/> : null}
 
-                    <TouchableOpacity style={[styles.loginButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.6} disabled={disabled}
+                    <TouchableOpacity style={[styles.authButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.6} disabled={disabled}
                                       onPress={handleLogin}>
-                        <Text style={[text.button, disabled ? text.disabled : text.white]}>Log In</Text>
+                        {loading ? (
+                            <ActivityIndicator size={"small"} color={"white"}/>
+                        ) : (
+                            <Text style={[text.button, disabled ? text.disabled : text.white]}>Log In</Text>
+                        )}
                     </TouchableOpacity>
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')} activeOpacity={0.5}>

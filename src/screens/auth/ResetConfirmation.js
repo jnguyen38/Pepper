@@ -23,7 +23,7 @@ export default function ResetConfirmationScreen(props) {
                     <Text style={[text.p, text.white]}>See you soon!</Text>
                 </View>
                 <View style={styles.loginForm}>
-                    <TouchableOpacity style={[styles.loginButton, styles.activeButton]} activeOpacity={0.7}
+                    <TouchableOpacity style={[styles.authButton, styles.activeButton]} activeOpacity={0.7}
                                       onPress={() => props.navigation.navigate("Login")}>
                         <Text style={[text.button, text.white]}>Back to Login</Text>
                     </TouchableOpacity>

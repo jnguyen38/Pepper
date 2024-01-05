@@ -6,7 +6,7 @@ import {
     TouchableWithoutFeedback,
     View,
     Image,
-    KeyboardAvoidingView, TouchableOpacity
+    KeyboardAvoidingView, TouchableOpacity, ActivityIndicator
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import {Footer, Error} from "./Login";
@@ -23,6 +23,7 @@ export default function ForgotPasswordScreen(props) {
     const [disabled, setDisabled] = useState(true);
     const [email, setEmail] = useState("");
     const [error, setError] = useState(undefined);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         setDisabled(!email);
@@ -30,9 +31,12 @@ export default function ForgotPasswordScreen(props) {
     }, [email])
 
     function handleResetPassword() {
+        setLoading(true)
         resetPassword(email).then(() => {
             props.navigation.navigate("ResetConfirmation", {email: email})
+            setLoading(false)
         }).catch(err => {
+            setLoading(false)
             setError(undefined)
             if (err.code === "auth/invalid-email") {
                 setError("Please enter a valid email");
@@ -73,9 +77,13 @@ export default function ForgotPasswordScreen(props) {
                                onChangeText={text => setEmail(text)}
                                autoComplete={"email"}/>
                     {error ? <Error error={error} setError={setError}/> : null}
-                    <TouchableOpacity style={[styles.loginButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.7}
+                    <TouchableOpacity style={[styles.authButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.7}
                                       onPress={handleResetPassword} disabled={disabled}>
-                        <Text style={[text.button, disabled ? text.disabled : text.white]}>Reset Password</Text>
+                        {loading ? (
+                            <ActivityIndicator size={"small"} color={"white"}/>
+                        ) : (
+                            <Text style={[text.button, disabled ? text.disabled : text.white]}>Reset Password</Text>
+                        )}
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

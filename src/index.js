@@ -3,7 +3,7 @@ import LoginScreen from "./screens/auth/Login";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
 import SignUpScreen from "./screens/auth/SignUp";
-import {StatusBar, Text, View} from "react-native";
+import {ActivityIndicator, StatusBar, Text, View} from "react-native";
 import NavBar from "./js/navbar";
 import React, {useEffect, useState} from "react";
 import * as Location from 'expo-location';
@@ -21,11 +21,13 @@ export default function Index() {
     const [location, setLocation] = useState(null);
     const [tab, setTab] = useState(0);
     const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState(undefined)
+    const [user, setUser] = useState(undefined);
+    const [emailVerified, setEmailVerified] = useState(false);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     function onAuthStateChangedHandler(newUser) {
         setUser(newUser)
+        if (newUser) setEmailVerified(newUser.emailVerified);
         if (initializing) {
             setInitializing(false);
         }
@@ -37,7 +39,8 @@ export default function Index() {
         user.reload().then(() => {
             const refreshUser = auth.currentUser;
             setUser(refreshUser)
-            console.log("Email verified:", refreshUser.emailVerified)
+            setEmailVerified(refreshUser.emailVerified)
+            console.log("Email verified:", emailVerified)
         })
     }
 
@@ -62,7 +65,7 @@ export default function Index() {
     if (initializing) {
         return (
             <View style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Text>Loading...</Text>
+                <ActivityIndicator size={"large"} color={"#6464f6"}/>
             </View>
         );
     }
@@ -81,7 +84,13 @@ export default function Index() {
         )
     }
 
-    return user.emailVerified ? (
+    if (!emailVerified) {
+        return (
+            <VerifyEmail user={user} forceReload={forceReloadUser}/>
+        )
+    }
+
+    return (
         <NavigationContainer>
             <View style={{height: "100%", width: "100%"}}>
                 <Tab.Navigator style={{height: "100%", width: "100%"}}
@@ -103,7 +112,5 @@ export default function Index() {
                 </Tab.Navigator>
             </View>
         </NavigationContainer>
-    ) : (
-        <VerifyEmail user={user} forceReload={forceReloadUser}/>
     )
 }

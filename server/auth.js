@@ -16,8 +16,7 @@ import * as Linking from 'expo-linking'
 
 export async function login(email, password) {
     try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        userCredential.user;
+        await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
         console.warn(err.message);
         throw err;
@@ -76,6 +75,7 @@ export async function createFirestoreUser(user, username) {
 export async function register(username, email, password) {
     username = username.toLowerCase()
     const userExists = await checkUsername(username);
+
     if (userExists)  {
         throw {
             code: "auth/username-already-exists",
@@ -109,7 +109,7 @@ export async function emailVerification() {
     const user = auth.currentUser;
     const actionCodeSettings = {
         handleCodeInApp: true,
-        url: null
+        url: "https://localhost"
     };
     try {
         await sendEmailVerification(user, actionCodeSettings).then(() => {
