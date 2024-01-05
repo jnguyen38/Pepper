@@ -7,6 +7,7 @@ module.exports = StyleSheet.create({
     red: {color: "red"},
     grey: {color: "#333333"},
     pepper: {color: "#6464f6"},
+    disabled: {color: "#ffffff22"},
     h1: {
         fontSize: getFont(28),
         fontFamily: 'Epilogue-Bold'
@@ -35,6 +36,11 @@ module.exports = StyleSheet.create({
     pItalics: {
         fontSize: getFont(14),
         fontFamily: 'Epilogue-LightItalic',
+        lineHeight: getFont(15)
+    },
+    pBold: {
+        fontSize: getFont(14),
+        fontFamily: 'Epilogue-SemiBold',
         lineHeight: getFont(15)
     },
     small: {

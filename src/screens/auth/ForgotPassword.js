@@ -9,24 +9,36 @@ import {
     KeyboardAvoidingView, TouchableOpacity
 } from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
-import {Footer} from "./Login";
+import {Footer, Error} from "./Login";
 
 import lock from "../../../assets/forgot-password.png";
 import styles from "../../styles/modules/auth/Auth.module.css";
 import root from "../../styles/Root.module.css";
 import text from "../../js/text";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {resetPassword} from "../../../server/auth";
 
 export default function ForgotPasswordScreen(props) {
     const [display, setDisplay] = useState("flex");
+    const [disabled, setDisabled] = useState(true);
     const [email, setEmail] = useState("");
+    const [error, setError] = useState(undefined);
+
+    useEffect(() => {
+        setDisabled(!email);
+        setError(undefined)
+    }, [email])
 
     function handleResetPassword() {
         resetPassword(email).then(() => {
-            console.log("Reset Password successful");
+            props.navigation.navigate("ResetConfirmation", {email: email})
         }).catch(err => {
-            console.warn(err);
+            setError(undefined)
+            if (err.code === "auth/invalid-email") {
+                setError("Please enter a valid email");
+            } else {
+                setError("Unknown Error: Code: " + err.code + " Message: " + err.message)
+            }
         })
     }
 
@@ -50,7 +62,7 @@ export default function ForgotPasswordScreen(props) {
                     </Text>
                 </View>
                 <View style={styles.loginForm}>
-                    <TextInput style={[styles.input, text.p]}
+                    <TextInput style={[styles.input, text.p, error ? styles.errorBorder : null]}
                                keyboardAppearance={'dark'}
                                placeholder={"Email"}
                                placeholderTextColor={"#ffffff88"}
@@ -60,9 +72,10 @@ export default function ForgotPasswordScreen(props) {
                                value={email}
                                onChangeText={text => setEmail(text)}
                                autoComplete={"email"}/>
-                    <TouchableOpacity style={[styles.loginButton]} activeOpacity={0.7}
-                                      onPress={handleResetPassword}>
-                        <Text style={[text.button, text.white]}>Reset Password</Text>
+                    {error ? <Error error={error} setError={setError}/> : null}
+                    <TouchableOpacity style={[styles.loginButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.7}
+                                      onPress={handleResetPassword} disabled={disabled}>
+                        <Text style={[text.button, disabled ? text.disabled : text.white]}>Reset Password</Text>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>

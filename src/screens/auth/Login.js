@@ -1,46 +1,63 @@
-import {Image, Keyboard, Pressable, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
+import {
+    Animated as RNAnimated,
+    Easing,
+    Image,
+    Keyboard,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
+import cross from "../../../assets/x-white.png";
+import errorIcon from "../../../assets/error.png";
 import pepperWhite from "../../../assets/brand/Pepper-Big-Logo-White.png";
 import google from "../../../assets/providers/googleNeutralSI.png";
 import text from "../../js/text";
 import styles from "../../styles/modules/auth/Auth.module.css";
 import root from "../../styles/Root.module.css";
-import {emailVerification, login} from "../../../server/auth";
+import {emailVerification, getUser, login} from "../../../server/auth";
+import {auth} from "../../../server/config/config";
+import * as Linking from "expo-linking";
 
 export default function LoginScreen(props) {
     const [hidePass, setHidePass] = useState(true)
-    const [loading, setLoading] = useState(false);
-    const [showEmailVerification, setShowEmailVerification] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState(undefined);
+    const [disabled, setDisabled] = useState(true);
+
+    useEffect(() => {
+        setDisabled(!email.length || !password.length)
+    }, [email, password])
 
     async function handleLogin() {
-        setLoading(true);
+        login(email, password).then(async () => {
+            const currUser = auth.currentUser;
 
-        try {
-            const currUser = await login(email, password);
-            console.log(currUser)
-
-            if (currUser) {
-                if (!currUser.emailVerified) {
-                    setShowEmailVerification(true);
-                    await emailVerification();
-                }
+            if (currUser && !currUser.emailVerified) {
+                await emailVerification();
             }
-        } catch (err) {
-            setLoading(false);
+        }).catch(err => {
+            setError(undefined)
             if (err.code === "auth/invalid-email") {
-                console.warn("Please enter a valid email. Please try again.");
-            } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
-                console.warn("Invalid email or password. Please try again.");
+                setError("Please enter a valid email address");
+            } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password"  || err.code === "auth/invalid-credential") {
+                setError("Invalid email or password");
             } else if (err.code === "auth/too-many-requests") {
-                console.warn("Too many unsuccessful login attempts. Please try again later.");
+                setError("Too many unsuccessful login attempts. Please try again later.");
             } else {
-                console.warn("Unknown sign in error:", err.code, err.message);
+                setError("Unknown sign in error: Code: " + err.code + " Message: " + err.message);
             }
-        }
+        })
+    }
+
+    function testLink() {
+        const link = Linking.createURL("Home")
+        console.log(link)
     }
 
     return (
@@ -74,21 +91,58 @@ export default function LoginScreen(props) {
                                value={password}
                                onChangeText={text => setPassword(text)}
                                autoComplete={"password"}/>
-                    <Pressable style={[styles.loginButton]} onPress={handleLogin}>
-                        <Text style={[text.button, text.white]}>Log In</Text>
-                    </Pressable>
-                    <Pressable onPress={() => props.navigation.navigate('ForgotPassword')}>
+
+                    {error ? <Error error={error} setError={setError}/> : null}
+
+                    <TouchableOpacity style={[styles.loginButton, disabled ? styles.disabledButton : styles.activeButton]} activeOpacity={0.6} disabled={disabled}
+                                      onPress={handleLogin}>
+                        <Text style={[text.button, disabled ? text.disabled : text.white]}>Log In</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity onPress={() => props.navigation.navigate('ForgotPassword')} activeOpacity={0.5}>
                         <Text style={[text.small, text.white]}>Forgot Password?</Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
 
                 <Or/>
-
-                <View style={styles.providers}>
-                    <Image source={google} style={styles.provider}/>
-                </View>
+                <TouchableOpacity onPress={() => testLink()} style={styles.providers}>
+                    <View style={styles.providers}>
+                        <Image source={google} style={styles.provider}/>
+                    </View>
+                </TouchableOpacity>
             </View>
         </TouchableWithoutFeedback>
+    )
+}
+
+export function Error(props) {
+    if (!props.error) return;
+
+    const [heightAnim] = useState(new RNAnimated.Value(15));
+
+    useEffect(() => {
+        RNAnimated.timing(
+            heightAnim,
+            {
+                toValue: 40,
+                duration: 300,
+                useNativeDriver: false,
+                easing: Easing.elastic(2)
+            }
+        ).start();
+    }, [])
+
+    return (
+        <RNAnimated.View style={[styles.errorContainer, {height: heightAnim}]}>
+            <View style={[styles.errorContent, {maxWidth: "70%"}]}>
+                <Image source={errorIcon} style={styles.errorIcon}/>
+                <Text style={[text.fine, text.white]}>{props.error}</Text>
+            </View>
+            <TouchableOpacity activeOpacity={0.5} style={[styles.errorCrossHolder]}
+                              onPress={() => props.setError(undefined)}>
+                <Image source={cross} style={styles.errorCross}/>
+            </TouchableOpacity>
+        </RNAnimated.View>
     )
 }
 

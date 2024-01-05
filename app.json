@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "pepper",
+    "scheme": "pepper",
     "slug": "pepper",
     "version": "1.0.0",
     "orientation": "portrait",

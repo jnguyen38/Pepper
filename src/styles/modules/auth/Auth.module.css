@@ -16,6 +16,15 @@
     margin: 20px;
 }
 
+.signUp {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    transform: translateY(-20px);
+}
+
 .logo {
     width: 50%;
     height: 10%;
@@ -53,12 +62,22 @@
 .loginButton {
     width: 80%;
     height: 50px;
-    background-color: #ffffff08;
     border-radius: 5px;
-    border: 1px #ffffff44 solid;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: background-color 200ms;
+}
+
+.activeButton {
+    background-color: #ffffff08;
+    border: 1px #ffffff44 solid;
+
+}
+
+.disabledButton {
+    background-color: #ffffff22;
+    border: 1px #ffffff22 solid;
 }
 
 .or {
@@ -113,4 +132,53 @@
     height: 22%;
     object-fit: contain;
     margin-bottom: 10%;
+}
+
+.errorContainer {
+    width: 80%;
+    background-color: #ff0000bb;
+    border-radius: 5px;
+    border: 1px #ffffff44 solid;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 10px;
+    align-items: center;
+    margin: -7px 0;
+    overflow: hidden;
+}
+
+.errorContent {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
+
+.errorCrossHolder {
+    width: 25px;
+    height: 25px;
+    border-radius: 13px;
+    background-color: #ffffff44;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.errorIcon {
+    height: 20px;
+    width: 20px;
+    margin-bottom: 2px;
+    object-fit: contain;
+}
+
+.errorCross {
+    height: 12px;
+    width: 12px;
+    object-fit: contain;
+}
+
+.errorBorder {
+    border: 1px solid red;
 }

@@ -11,6 +11,8 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {AddTab, CirclesTab, HomeTab, ProfileTab, SearchTab} from "./js/tabs";
 import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from "../server/config/config";
+import ResetConfirmationScreen from "./screens/auth/ResetConfirmation";
+import VerifyEmail from "./screens/auth/VerifyEmail";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -22,12 +24,22 @@ export default function Index() {
     const [user, setUser] = useState(undefined)
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
-    const onAuthStateChangedHandler = (newUser) => {
+    function onAuthStateChangedHandler(newUser) {
         setUser(newUser)
         if (initializing) {
             setInitializing(false);
         }
-    };
+    }
+
+    function forceReloadUser() {
+        const user = auth.currentUser;
+
+        user.reload().then(() => {
+            const refreshUser = auth.currentUser;
+            setUser(refreshUser)
+            console.log("Email verified:", refreshUser.emailVerified)
+        })
+    }
 
     useEffect(() => {
         async function getLocation() {
@@ -55,7 +67,21 @@ export default function Index() {
         );
     }
 
-    return user ? (
+    if (!user) {
+        return (
+            <NavigationContainer>
+                <StatusBar barStyle={"light-content"}/>
+                <LoginStack.Navigator screenOptions={{headerShown: false}}>
+                    <LoginStack.Screen name={"Login"} component={LoginScreen} options={{animation: "none"}}/>
+                    <LoginStack.Screen name={"ForgotPassword"} component={ForgotPasswordScreen}/>
+                    <LoginStack.Screen name={"SignUp"} component={SignUpScreen}/>
+                    <LoginStack.Screen name={"ResetConfirmation"} component={ResetConfirmationScreen}/>
+                </LoginStack.Navigator>
+            </NavigationContainer>
+        )
+    }
+
+    return user.emailVerified ? (
         <NavigationContainer>
             <View style={{height: "100%", width: "100%"}}>
                 <Tab.Navigator style={{height: "100%", width: "100%"}}
@@ -78,14 +104,6 @@ export default function Index() {
             </View>
         </NavigationContainer>
     ) : (
-        <NavigationContainer>
-            <StatusBar barStyle={"light-content"}/>
-            <LoginStack.Navigator screenOptions={{headerShown: false}}>
-                <LoginStack.Screen name={"Login"} component={LoginScreen} options={{animation: "none"}}/>
-                <LoginStack.Screen name={"ForgotPassword"} component={ForgotPasswordScreen}/>
-                <LoginStack.Screen name={"SignUp"} component={SignUpScreen}/>
-            </LoginStack.Navigator>
-        </NavigationContainer>
-
+        <VerifyEmail user={user} forceReload={forceReloadUser}/>
     )
 }
