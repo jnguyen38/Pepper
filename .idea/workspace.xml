@@ -5,15 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19d97c30-dd75-47cf-bde4-5eee39dfed2d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/add-white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/storage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/screens/InitializeUser.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/ForgotPassword.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/ForgotPassword.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/Login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/ResetConfirmation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/ResetConfirmation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/SignUp.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/SignUp.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/VerifyEmail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/VerifyEmail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/tabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/main/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Profile.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Profile.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +33,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2aVMYiNjtW8ZOp9yTBiA2Xv6kCZ" />
   <component name="ProjectLevelVcsManager">
@@ -62,7 +69,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1704399344050</updated>
-      <workItem from="1704399345076" duration="18055000" />
+      <workItem from="1704399345076" duration="41050000" />
     </task>
     <servers />
   </component>

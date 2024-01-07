@@ -18,6 +18,7 @@ import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
 import {useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
+import {resetDisplayName} from "../../../server/user";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false);
@@ -88,7 +89,7 @@ export default function ProfileScreen(props) {
                             <Image source={privacy} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Privacy Policy</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.option} activeOpacity={0.7}>
+                        <TouchableOpacity style={styles.option} activeOpacity={0.7} onPress={() => resetDisplayName()}>
                             <Image source={settings} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Settings</Text>
                         </TouchableOpacity>
