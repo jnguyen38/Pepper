@@ -39,14 +39,13 @@ export default function InitializeUser(props) {
 
         if (!result.canceled) {
             setImage(result.assets[0].uri)
-            console.log("Image:", result.assets[0])
             console.log(typeof (result.assets[0]))
         }
     }
 
     function handleUpdate() {
         setLoading(true)
-        initializeUserInfo(name, unmaskedNumber, image).then(() => {
+        initializeUserInfo(name, number, image).then(() => {
             setLoading(false)
             props.forceReload()
         }).catch(err => {

@@ -5,18 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19d97c30-dd75-47cf-bde4-5eee39dfed2d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/add-white.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/storage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/InitializeUser.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/config/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/config/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/tabs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/InitializeUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/InitializeUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/main/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Home.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/main/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Profile.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Profile.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +67,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1704399344050</updated>
-      <workItem from="1704399345076" duration="41050000" />
+      <workItem from="1704399345076" duration="47399000" />
     </task>
     <servers />
   </component>

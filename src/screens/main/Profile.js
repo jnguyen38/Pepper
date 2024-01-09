@@ -1,5 +1,5 @@
 import {Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
-import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 
 import styles from "../../styles/modules/main/Profile.module.css";
@@ -16,12 +16,16 @@ import logout from "../../../assets/profile/logout-slim.png";
 import settings from "../../../assets/profile/settings.png";
 import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
-import {resetDisplayName} from "../../../server/user";
+import {getUser, resetDisplayName} from "../../../server/user";
+import {auth} from "../../../server/config/config";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false);
+    const [user, setUser] = useState(undefined)
+    const [authUser] = useState(auth.currentUser)
+    const [image, setImage] = useState(undefined)
 
     function handleLogout() {
         logoutFirebase().then(() => {
@@ -29,6 +33,28 @@ export default function ProfileScreen(props) {
             console.warn(err);
         });
     }
+
+    function handleCreationTime() {
+        const arr = user.creationTime.toString().split(" ")
+        return `${arr[2]} ${arr[3]}`
+    }
+
+    async function handleFetchUserData() {
+        const photoFetch = await fetch(authUser.photoURL)
+        setImage(photoFetch)
+        return await getUser(authUser.uid)
+    }
+
+    useEffect(() => {
+        console.log("Fetching user data (Should only log once)")
+        handleFetchUserData().then(res => {
+            setUser(res)
+        })
+    }, [])
+
+    if (!user) return (
+        <Loading/>
+    )
 
     return (
         <View style={[root.statusBar]}>
@@ -39,7 +65,7 @@ export default function ProfileScreen(props) {
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
                     <View style={styles.profilePic}>
-                        <Image source={profilePic} style={styles.profilePicImg}/>
+                        <Image source={image} style={styles.profilePicImg}/>
                         <View style={styles.edit}>
                             <LinearGradient colors={['#3a6cf0', '#652cd2']}
                                             start={{x: 1, y: 1}}
@@ -50,22 +76,24 @@ export default function ProfileScreen(props) {
                     </View>
 
                     <View style={styles.textContainer}>
-                        <Text style={[text.h1, text.grey]}>Pepper Admin</Text>
-                        <Text style={[text.p, text.black]}>@pepperadmin</Text>
+                        <Text style={[text.h1, text.pepper]}>{user.displayName}</Text>
+                        <Text style={[text.p, text.black]}>@{user.username}</Text>
                     </View>
 
                     <View style={styles.contactInfo}>
-                        <View style={styles.infoLine}>
-                            <Image source={phone} style={{width: 25, height: 25}}/>
-                            <Text style={[text.black, text.p]}>(908) 723-6988</Text>
-                        </View>
+                        {user.phoneNumber ? (
+                            <View style={styles.infoLine}>
+                                <Image source={phone} style={{width: 25, height: 25}}/>
+                                <Text style={[text.black, text.p]}>{user.phoneNumber}</Text>
+                            </View>
+                        ) : null}
                         <View style={styles.infoLine}>
                             <Image source={mail} style={{width: 25, height: 25}}/>
-                            <Text style={[text.black, text.p]}>jnguyen5@nd.edu</Text>
+                            <Text style={[text.black, text.p]}>{user.email}</Text>
                         </View>
                         <View style={styles.infoLine}>
                             <Image source={joined} style={{width: 22, height: 25, objectFit: "contain"}}/>
-                            <Text style={[text.black, text.p]}>Joined December 2023</Text>
+                            <Text style={[text.black, text.p]}>Joined {handleCreationTime()}</Text>
                         </View>
                     </View>
 

@@ -9,11 +9,31 @@ import {
 import {doc, getDoc} from "firebase/firestore";
 import {createFirestoreUser} from "./user";
 
-export async function login(email, password) {
+async function getEmailFromUsername(username) {
+    const emailRef = doc(db, "takenUsernames", username)
     try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (err) {
+        const user = await getDoc(emailRef)
+        if (user.exists())
+            return user.data().email
+    } catch(err) {
         console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function login(email, password) {
+    email = email.toLowerCase()
+
+    try {
+        if (!email.includes("@")) {
+            console.log("entered is a username")
+            email = await getEmailFromUsername(email)
+        }
+
+        await signInWithEmailAndPassword(auth, email, password);
+
+    } catch (err) {
+        console.warn("Login Error:", err.message);
         throw err;
     }
 }
@@ -24,13 +44,14 @@ export async function checkUsername(username) {
         const user = await getDoc(docRef)
         return user.exists()
     } catch (err) {
-        console.warn(err.message);
+        console.warn("Check Username Error:", err.message);
         throw err;
     }
 }
 
 export async function register(username, email, password) {
     username = username.toLowerCase()
+    email = email.toLowerCase()
     const userExists = await checkUsername(username);
 
     if (userExists)  {

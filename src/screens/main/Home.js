@@ -4,10 +4,9 @@ import text from "../../js/text";
 import {Text, TouchableOpacity, View} from "react-native";
 import {LinearGradient} from "expo-linear-gradient";
 import MapView from "react-native-maps";
-import {CustomSafeAreaView, FocusAwareStatusBar} from "../../js/util";
+import {CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../../js/util";
 
 export default function HomeScreen(props) {
-
     return (
         <View style={root.statusBar}>
             <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
@@ -39,6 +38,11 @@ function Map(props) {
         latitudeDelta: 0.03,
         longitudeDelta: 0.015
     }
+
+    if (!location) return (
+        <Loading/>
+    )
+
     const myLoc = {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,

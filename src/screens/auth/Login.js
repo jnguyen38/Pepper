@@ -59,6 +59,8 @@ export default function LoginScreen(props) {
                 setEmailError(true)
             } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password"  || err.code === "auth/invalid-credential") {
                 setError("Invalid email or password");
+            } else if (err.code === "auth/missing-email" || err.code === "auth/wrong-password"  || err.code === "auth/invalid-credential") {
+                setError("Invalid email or password");
             } else if (err.code === "auth/too-many-requests") {
                 setError("Too many unsuccessful login attempts. Please try again later.");
             } else {
@@ -87,12 +89,12 @@ export default function LoginScreen(props) {
                 <View style={styles.loginForm}>
                     <TextInput style={[styles.input, text.p, emailError ? styles.errorBorder : null]}
                                keyboardAppearance={'dark'}
-                               placeholder={"Email"}
+                               placeholder={"Username or email"}
                                placeholderTextColor={"#ffffff88"}
                                selectionColor={"white"}
                                value={email}
                                onChangeText={text => setEmail(text)}
-                               autoComplete={"email"}/>
+                               autoComplete={"username"}/>
                     <TextInput style={[styles.input, text.p]}
                                keyboardAppearance={'dark'}
                                placeholder={"Password"}

@@ -21,7 +21,8 @@ export async function createFirestoreUser(user, username) {
         });
 
         batch.set(takenRef, {
-            uid: user.uid
+            uid: user.uid,
+            email: user.email
         });
 
         await batch.commit();
@@ -66,7 +67,6 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
         if (photoURL) {
             profile.photoURL = await setProfilePicture(photoURL, user.uid)
             batch.update(userRef, {photoURL: profile.photoURL})
-            console.log("Stored photo url")
         }
 
         // Update Firebase phoneNumber
@@ -79,7 +79,7 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
         batch.update(userRef, {displayName: displayName})
 
         await batch.commit()
-        console.log("Success")
+        console.log("Initialize User: Success")
     } catch (err) {
         throw err;
     }

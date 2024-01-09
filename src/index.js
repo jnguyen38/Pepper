@@ -14,6 +14,7 @@ import {auth} from "../server/config/config";
 import ResetConfirmationScreen from "./screens/auth/ResetConfirmation";
 import VerifyEmail from "./screens/auth/VerifyEmail";
 import InitializeUser from "./screens/InitializeUser";
+import {Loading} from "./js/util";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -22,13 +23,13 @@ export default function Index() {
     const [location, setLocation] = useState(null);
     const [tab, setTab] = useState(0);
     const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState(undefined);
+    const [authUser, setAuthUser] = useState(undefined);
     const [emailVerified, setEmailVerified] = useState(false);
     const [displayName, setDisplayName] = useState(undefined);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     function onAuthStateChangedHandler(newUser) {
-        setUser(newUser)
+        setAuthUser(newUser)
         if (newUser) {
             setEmailVerified(newUser.emailVerified);
             setDisplayName(newUser.displayName);
@@ -44,7 +45,7 @@ export default function Index() {
 
         user.reload().then(() => {
             const refreshUser = auth.currentUser;
-            setUser(refreshUser)
+            setAuthUser(refreshUser)
             setEmailVerified(refreshUser.emailVerified)
             setDisplayName(refreshUser.displayName);
             console.log("Email verified:", emailVerified)
@@ -74,12 +75,10 @@ export default function Index() {
     }, [])
 
     if (initializing) return (
-        <View style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <ActivityIndicator size={"large"} color={"#6464f6"}/>
-        </View>
+        <Loading/>
     )
 
-    if (!user) return (
+    if (!authUser) return (
         <NavigationContainer>
             <StatusBar barStyle={"light-content"}/>
             <LoginStack.Navigator screenOptions={{headerShown: false}}>
@@ -92,11 +91,11 @@ export default function Index() {
     )
 
     if (!emailVerified) return (
-        <VerifyEmail user={user} forceReload={forceReloadUser}/>
+        <VerifyEmail user={authUser} forceReload={forceReloadUser}/>
     )
 
     if (!displayName) return (
-        <InitializeUser user={user} forceReload={forceDisplayName}/>
+        <InitializeUser user={authUser} forceReload={forceDisplayName}/>
     )
 
     return (

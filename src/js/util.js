@@ -1,8 +1,9 @@
-import {Image, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, Image, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity, View} from "react-native";
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
 import {useIsFocused} from "@react-navigation/native";
+import React from "react";
 
 export function getFont(size) {
     const fontScale = PixelRatio.getFontScale()
@@ -59,4 +60,12 @@ export function FocusAwareStatusBar(props) {
     const isFocused = useIsFocused();
 
     return isFocused ? <StatusBar {...props} /> : null;
+}
+
+export function Loading() {
+    return (
+        <View style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <ActivityIndicator size={"large"} color={"#6464f6"}/>
+        </View>
+    )
 }
