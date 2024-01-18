@@ -18,14 +18,15 @@ import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
 import {useEffect, useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
-import {getUser, resetDisplayName} from "../../../server/user";
+import {resetDisplayName} from "../../../server/user";
 import {auth} from "../../../server/config/config";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false);
-    const [user, setUser] = useState(undefined)
     const [authUser] = useState(auth.currentUser)
     const [image, setImage] = useState(undefined)
+    const [loading, setLoading] = useState(true)
+    const user = props.route.params.user;
 
     function handleLogout() {
         logoutFirebase().then(() => {
@@ -40,19 +41,18 @@ export default function ProfileScreen(props) {
     }
 
     async function handleFetchUserData() {
-        const photoFetch = await fetch(authUser.photoURL)
-        setImage(photoFetch)
-        return await getUser(authUser.uid)
+        const blob = await fetch(authUser.photoURL)
+        setImage(blob)
     }
 
     useEffect(() => {
         console.log("Fetching user data (Should only log once)")
-        handleFetchUserData().then(res => {
-            setUser(res)
+        handleFetchUserData().then(() => {
+            setLoading(false)
         })
     }, [])
 
-    if (!user) return (
+    if (loading || !user) return (
         <Loading/>
     )
 
@@ -98,13 +98,13 @@ export default function ProfileScreen(props) {
                     </View>
 
                     <View style={styles.socialInfo}>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles", {circles: user.circles})}>
                             <Image source={circles} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>7 Circles</Text>
+                            <Text style={[text.pepper, text.h4]}>{user.circle_count} Circles</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
+                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: user.friends})}>
                             <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>185 Friends</Text>
+                            <Text style={[text.pepper, text.h4]}>{user.friend_count} Friends</Text>
                         </TouchableOpacity>
                     </View>
 

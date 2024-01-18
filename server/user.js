@@ -1,5 +1,5 @@
 import {updateProfile} from "firebase/auth";
-import {doc, getDoc, writeBatch} from "firebase/firestore"
+import {doc, getDoc, writeBatch, updateDoc, increment, arrayUnion, arrayRemove} from "firebase/firestore"
 import {setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
 
@@ -17,7 +17,11 @@ export async function createFirestoreUser(user, username) {
             phoneNumber: user.phoneNumber,
             email: user.email,
             photoURL: user.photoURL,
-            username: username
+            username: username,
+            friend_count: 0,
+            friends: [],
+            circle_count: 0,
+            circles: []
         });
 
         batch.set(takenRef, {
@@ -49,6 +53,32 @@ export async function resetDisplayName() {
         await updateProfile(user, {displayName: ""});
         console.log("profile displayName reset")
     } catch (err) {
+        throw err;
+    }
+}
+
+export async function joinCircle(user, circle) {
+    const userRef = doc(db, `users/${user}`)
+    try {
+        await updateDoc(userRef, {
+            circle_count: increment(1),
+            circles: arrayUnion(circle)
+        })
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function leaveCircle(user, circle) {
+    const userRef = doc(db, `users/${user}`)
+    try {
+        await updateDoc(userRef, {
+            circle_count: increment(-1),
+            circles: arrayRemove(circle)
+        })
+    } catch (err) {
+        console.warn(err.message);
         throw err;
     }
 }

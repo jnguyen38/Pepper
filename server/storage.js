@@ -36,3 +36,32 @@ export async function setProfilePicture(uri, uid) {
     }
 }
 
+export async function setCircleImage(cover, logo, uid) {
+    const coverRef = ref(storage, `circles/${uid}-cover`);
+    const logoRef = ref(storage, `circles/${uid}-logo`);
+
+    try {
+        let arr = cover.toString().split("/")
+        let coverName = arr[arr.length - 1]
+        arr = logo.toString().split("/")
+        let logoName = arr[arr.length - 1]
+        if (Platform.OS === 'ios') {
+            const originalCover = cover;
+            const originalLogo = logo;
+            cover = `${FileSystem.documentDirectory}resumableUploadManager-${coverName}.toupload`;
+            logo = `${FileSystem.documentDirectory}resumableUploadManager-${logoName}.toupload`;
+            await FileSystem.copyAsync({ from: originalCover, to: cover });
+            await FileSystem.copyAsync({ from: originalLogo, to: logo });
+        }
+
+        let coverBlob = new Blob([await (await fetch(cover)).blob()], { type: 'image/jpeg' });
+        let logoBlob = new Blob([await (await fetch(logo)).blob()], { type: 'image/jpeg' });
+
+        const coverSnapshot = await uploadBytes(coverRef, coverBlob);
+        const logoSnapshot = await uploadBytes(logoRef, logoBlob);
+    } catch(err) {
+        console.warn(err);
+        throw err;
+    }
+}
+

@@ -3,7 +3,7 @@ import LoginScreen from "./screens/auth/Login";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
 import SignUpScreen from "./screens/auth/SignUp";
-import {ActivityIndicator, StatusBar, View} from "react-native";
+import {DeviceEventEmitter, StatusBar, View} from "react-native";
 import NavBar from "./js/navbar";
 import React, {useEffect, useState} from "react";
 import * as Location from 'expo-location';
@@ -15,6 +15,8 @@ import ResetConfirmationScreen from "./screens/auth/ResetConfirmation";
 import VerifyEmail from "./screens/auth/VerifyEmail";
 import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
+import {getUser} from "../server/user";
+import AddScreen from "./screens/main/Add";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -24,6 +26,7 @@ export default function Index() {
     const [tab, setTab] = useState(0);
     const [initializing, setInitializing] = useState(true);
     const [authUser, setAuthUser] = useState(undefined);
+    const [user, setUser] = useState(undefined);
     const [emailVerified, setEmailVerified] = useState(false);
     const [displayName, setDisplayName] = useState(undefined);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
@@ -40,7 +43,7 @@ export default function Index() {
         }
     }
 
-    function forceReloadUser() {
+    function forceUpdateAuthUser() {
         const user = auth.currentUser;
 
         user.reload().then(() => {
@@ -50,6 +53,11 @@ export default function Index() {
             setDisplayName(refreshUser.displayName);
             console.log("Email verified:", emailVerified)
         })
+    }
+
+    function forceUpdateUser() {
+        if (authUser)
+            getUser(authUser.uid).then(res => setUser(res))
     }
 
     function forceDisplayName() {
@@ -70,9 +78,19 @@ export default function Index() {
         }
 
         getLocation().then();
+        DeviceEventEmitter.addListener("updateUser", () => forceUpdateUser());
 
         return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
+
+    useEffect(() => {
+        if (authUser) {
+            getUser(authUser.uid).then(res => {
+                setUser(res);
+                console.log("Index loaded", res)
+            })
+        }
+    }, [authUser])
 
     if (initializing) return (
         <Loading/>
@@ -91,7 +109,7 @@ export default function Index() {
     )
 
     if (!emailVerified) return (
-        <VerifyEmail user={authUser} forceReload={forceReloadUser}/>
+        <VerifyEmail user={authUser} forceReload={forceUpdateAuthUser}/>
     )
 
     if (!displayName) return (
@@ -108,15 +126,16 @@ export default function Index() {
                                screenOptions={{headerShown: false}}>
                     <Tab.Screen name={tabs[0]}
                                 component={HomeTab}
-                                initialParams={{location: location}}/>
+                                initialParams={{location, user}}/>
                     <Tab.Screen name={tabs[1]}
-                                component={SearchTab}/>
-                    <Tab.Screen name={tabs[2]}
-                                component={AddTab}/>
+                                component={SearchTab} initialParams={{user}}/>
+                    <Tab.Screen name={tabs[2]}>
+                        {props => <AddTab user={user} forceUpadateUser={forceUpdateUser}/>}
+                    </Tab.Screen>
                     <Tab.Screen name={tabs[3]}
-                                component={CirclesTab}/>
+                                component={CirclesTab} initialParams={{user}}/>
                     <Tab.Screen name={tabs[4]}
-                                component={ProfileTab}/>
+                                component={ProfileTab} initialParams={{user}}/>
                 </Tab.Navigator>
             </View>
         </NavigationContainer>

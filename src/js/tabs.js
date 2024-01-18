@@ -7,6 +7,7 @@ import HomeScreen from "../screens/main/Home";
 import CircleInfoScreen from "../screens/CircleInfo";
 import MembersScreen from "../screens/Members";
 import EventsList from "../screens/Events";
+import NewCircle from "../screens/NewCircle";
 
 export function HomeTab({route}) {
     const {Navigator, Screen} = createNativeStackNavigator();
@@ -32,13 +33,16 @@ export function SearchTab() {
     )
 }
 
-export function AddTab() {
+export function AddTab(props) {
     const {Navigator, Screen} = createNativeStackNavigator();
 
     return (
         <Navigator style={{width: "100%", height: "100%"}}
                    screenOptions={{headerShown: false}}>
-            <Screen name={"Home"} component={AddScreen}/>
+            <Screen name={"Home"}>
+                {nav => <AddScreen {...nav} user={props.user} forceUpadateUser={props.forceUpdateUser}/>}
+            </Screen>
+            <Screen name={"NewCircle"} component={NewCircle}/>
         </Navigator>
     )
 }
@@ -59,13 +63,14 @@ export function CirclesTab() {
     )
 }
 
-export function ProfileTab() {
+export function ProfileTab(props) {
     const {Navigator, Screen} = createNativeStackNavigator();
+    const user = props.route.params.user;
 
     return (
         <Navigator style={{width: "100%", height: "100%"}}
                    screenOptions={{headerShown: false}}>
-            <Screen name={"Home"} component={ProfileScreen}/>
+            <Screen name={"Home"} component={ProfileScreen} initialParams={{user}}/>
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
             <Screen name={"MembersList"} component={MembersScreen}/>
