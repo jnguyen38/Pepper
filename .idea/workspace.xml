@@ -5,23 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19d97c30-dd75-47cf-bde4-5eee39dfed2d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/server/add.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/screens/NewCircle.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/eas.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Podfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/pepper.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/ios/pepper.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ios/pepper/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/ios/pepper/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/storage.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/storage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/tabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/main/Add.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Add.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/main/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Add.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Add.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,6 +64,7 @@
       <workItem from="1704399345076" duration="64492000" />
       <workItem from="1704897868823" duration="10239000" />
       <workItem from="1705010049365" duration="221000" />
+      <workItem from="1705540466088" duration="2361000" />
     </task>
     <servers />
   </component>
