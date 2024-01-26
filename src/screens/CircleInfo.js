@@ -7,8 +7,10 @@ import {LinearGradient} from "expo-linear-gradient";
 import circles from "../../assets/profile/circlesPurple.png";
 import events from "../../assets/events.png";
 import reply from "../../assets/reply.png";
-import {BackButton, FocusAwareStatusBar} from "../js/util";
+import {BackButton, FocusAwareStatusBar, Loading} from "../js/util";
 import settings from "../../assets/settings-white.png"
+import {auth} from "../../server/config/config";
+import {useEffect, useState} from "react";
 
 const IMG_HEIGHT = 250;
 
@@ -181,57 +183,58 @@ export default function CircleInfoScreen(props) {
                                     start={{x: 0, y: 0.5}}
                                     end={{x: 1, y: 0.5}}
                                     style={[root.linearBackground, {zIndex: 10}]}/>
-                    <Image source={props.route.params.background}
-                           style={[styles.backgroundImage]}/>
-                    <Text style={[text.pItalics, text.white, {zIndex: 10}]}>Notre Dame</Text>
+                    <Image source={{uri: URL.createObjectURL(props.route.params.cover)}} style={[styles.backgroundImage]}/>
+                    <Text style={[text.pItalics, text.white, {zIndex: 10}]}>{props.route.params.community}</Text>
                     <Text style={[text.h1, text.white, {zIndex: 10, textAlign: "center"}]}>{props.route.params.title}</Text>
                 </Animated.View>
 
                 <View style={styles.infoContainer}>
-                        <View style={styles.socialInfo}>
-                            <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
-                                              onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
-                                <Image source={circles} style={styles.socialIcon}/>
-                                <Text style={[text.grey, text.h4]}>{props.route.params.members} Members</Text>
-                                <Text style={[text.black, text.small]}>12 Friends</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
-                                              onPress={() => props.navigation.push("EventsList")}>
-                                <Image source={events} style={styles.socialIcon}/>
-                                <Text style={[text.grey, text.h4]}>3 Events</Text>
-                                <Text style={[text.black, text.small]}>1 RSVP</Text>
-                            </TouchableOpacity>
-                        </View>
+                    <View style={styles.socialInfo}>
+                        <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
+                                          onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
+                            <Image source={circles} style={styles.socialIcon}/>
+                            <Text style={[text.grey, text.h4]}>{props.route.params.member_count} Member{props.route.params.member_count === 1 ? "":"s"}</Text>
+                            <Text style={[text.black, text.small]}>12 Friends</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
+                                          onPress={() => props.navigation.push("EventsList")}>
+                            <Image source={events} style={styles.socialIcon}/>
+                            <Text style={[text.grey, text.h4]}>{props.route.params.active_events_count} Event{props.route.params.active_events_count === 1 ? "":"s"}</Text>
+                            <Text style={[text.black, text.small]}>1 RSVP</Text>
+                        </TouchableOpacity>
+                    </View>
 
+                    {props.route.params.managers.includes(auth.currentUser.uid) ? (
                         <Manager {...props}/>
+                    ) : null}
 
-                        <View style={styles.description}>
-                            <Text style={[text.h2, text.pepper]}>Description</Text>
-                            <Text style={[text.p, text.grey, {marginLeft: 10}]}>{props.route.params?.description}</Text>
-                        </View>
+                    <View style={styles.description}>
+                        <Text style={[text.h2, text.pepper]}>Description</Text>
+                        <Text style={[text.desc, text.grey, {marginLeft: 20}]}>{props.route.params?.description}</Text>
+                    </View>
 
-                        <View style={styles.posts}>
-                            <Text style={[text.h2, text.pepper]}>Recent Posts</Text>
-                            {postData.map((post, index) =>
-                                <TouchableOpacity key={index} style={styles.post} activeOpacity={0.8}>
-                                    <View style={styles.postText}>
-                                        <Text style={[text.small, text.black]}>{post.author}</Text>
-                                        <Text style={[text.h3, text.pepper]}>{post.title}</Text>
-                                    </View>
-                                    <View style={styles.replies}>
-                                        <Image source={reply} style={styles.replyIcon}/>
-                                        <Text style={[text.fineBold, text.white]}>{post.replies.length} {post.replies.length === 1 ? "Reply" : "Replies"}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )}
-                        </View>
+                    <View style={styles.posts}>
+                        <Text style={[text.h2, text.pepper]}>Recent Posts</Text>
+                        {postData.map((post, index) =>
+                            <TouchableOpacity key={index} style={styles.post} activeOpacity={0.8}>
+                                <View style={styles.postText}>
+                                    <Text style={[text.small, text.black]}>{post.author}</Text>
+                                    <Text style={[text.h3, text.pepper]}>{post.title}</Text>
+                                </View>
+                                <View style={styles.replies}>
+                                    <Image source={reply} style={styles.replyIcon}/>
+                                    <Text style={[text.fineBold, text.white]}>{post.replies.length} {post.replies.length === 1 ? "Reply" : "Replies"}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 </View>
             </Animated.ScrollView>
         </View>
     )
 }
 
-function Manager(props) {
+function Manager() {
     return (
         <View style={styles.manageGradient}>
             <LinearGradient colors={['#3942f6', '#6a28cc']}

@@ -69,3 +69,8 @@ export function Loading() {
         </View>
     )
 }
+
+export async function parseDownloadURL(downloadURL) {
+    console.log("GET DownloadURL")
+    return await (await fetch(downloadURL)).blob()
+}

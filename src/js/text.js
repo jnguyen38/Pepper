@@ -43,6 +43,14 @@ module.exports = StyleSheet.create({
         fontFamily: 'Epilogue-SemiBold',
         lineHeight: getFont(15)
     },
+    desc: {
+        fontSize: getFont(13),
+        fontFamily: 'Epilogue-ExtraLight',
+    },
+    descBold: {
+        fontSize: getFont(13),
+        fontFamily: 'Epilogue-SemiBold',
+    },
     small: {
         fontSize: getFont(12),
         fontFamily: 'Epilogue-ExtraLight'

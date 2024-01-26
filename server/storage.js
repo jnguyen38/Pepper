@@ -1,8 +1,30 @@
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
+import {getDownloadURL, ref, uploadBytes, getBlob} from "firebase/storage";
 import {storage} from "./config/config";
 import {Platform} from "react-native";
 import * as FileSystem from "expo-file-system";
+import {parseDownloadURL} from "../src/js/util";
 
+export async function getCircleLogo(id) {
+    const circleRef = ref(storage, `circles/${id}-logo`)
+    try {
+        const downloadURL = await getDownloadURL(circleRef)
+        return await parseDownloadURL(downloadURL)
+    } catch (err) {
+        console.warn(err)
+        throw err
+    }
+}
+
+export async function getCircleCover(id) {
+    const circleRef = ref(storage, `circles/${id}-cover`)
+    try {
+        const downloadURL = await getDownloadURL(circleRef)
+        return await parseDownloadURL(downloadURL)
+    } catch (err) {
+        console.warn(err)
+        throw err
+    }
+}
 
 export async function setProfilePicture(uri, uid) {
     const storageRef = ref(storage, `profiles/${uid}`);

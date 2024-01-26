@@ -208,7 +208,7 @@ function AddCircle(props) {
         // No permissions request is necessary for launching the image library
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 0.3,
+            quality: 0.5,
         })
 
         if (!result.canceled) {

@@ -1,7 +1,8 @@
 import {updateProfile} from "firebase/auth";
-import {doc, getDoc, writeBatch, updateDoc, increment, arrayUnion, arrayRemove} from "firebase/firestore"
-import {setProfilePicture} from "./storage";
+import {arrayRemove, arrayUnion, doc, getDoc, increment, updateDoc, writeBatch} from "firebase/firestore"
+import {getCircleCover, getCircleLogo, setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
+import {useQuery} from "@tanstack/react-query";
 
 
 export async function createFirestoreUser(user, username) {
@@ -111,6 +112,33 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
         await batch.commit()
         console.log("Initialize User: Success")
     } catch (err) {
+        throw err;
+    }
+}
+
+export async function getCircles(circles) {
+    try {
+        return await Promise.all(circles.map(async circle => {
+            return await getCircle(circle)
+        }))
+    } catch(err) {
+        console.log("Get Circles Error:", err)
+        throw err;
+    }
+}
+
+export async function getCircle(circle) {
+    const circleRef = doc(db, `circles/${circle}`)
+    console.log("GET CIRCLE", circle)
+
+    try {
+        let res = await getDoc(circleRef)
+        res = res.data()
+        res.cover = await getCircleCover(circle)
+        res.logo = await getCircleLogo(circle)
+        return res
+    } catch(err) {
+        console.log("Get Circle Error:", err)
         throw err;
     }
 }

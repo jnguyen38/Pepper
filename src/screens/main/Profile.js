@@ -1,5 +1,5 @@
 import {Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
-import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../../js/util";
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading, parseDownloadURL} from "../../js/util";
 import {LinearGradient} from "expo-linear-gradient";
 
 import styles from "../../styles/modules/main/Profile.module.css";
@@ -20,13 +20,17 @@ import {useEffect, useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
 import {resetDisplayName} from "../../../server/user";
 import {auth} from "../../../server/config/config";
+import {useQuery} from "@tanstack/react-query";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false);
     const [authUser] = useState(auth.currentUser)
-    const [image, setImage] = useState(undefined)
-    const [loading, setLoading] = useState(true)
     const user = props.route.params.user;
+
+    const profilePictureQuery = useQuery({
+        queryKey: ['profile/', authUser.uid],
+        queryFn: async () => await parseDownloadURL(authUser.photoURL)
+    })
 
     function handleLogout() {
         logoutFirebase().then(() => {
@@ -40,19 +44,8 @@ export default function ProfileScreen(props) {
         return `${arr[2]} ${arr[3]}`
     }
 
-    async function handleFetchUserData() {
-        const blob = await fetch(authUser.photoURL)
-        setImage(blob)
-    }
 
-    useEffect(() => {
-        console.log("Fetching user data (Should only log once)")
-        handleFetchUserData().then(() => {
-            setLoading(false)
-        })
-    }, [])
-
-    if (loading || !user) return (
+    if (!user || profilePictureQuery.isPending) return (
         <Loading/>
     )
 
@@ -65,7 +58,7 @@ export default function ProfileScreen(props) {
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
                     <View style={styles.profilePic}>
-                        <Image source={image} style={styles.profilePicImg}/>
+                        <Image source={{uri: URL.createObjectURL(profilePictureQuery.data)}} style={styles.profilePicImg}/>
                         <View style={styles.edit}>
                             <LinearGradient colors={['#3a6cf0', '#652cd2']}
                                             start={{x: 1, y: 1}}
@@ -98,11 +91,13 @@ export default function ProfileScreen(props) {
                     </View>
 
                     <View style={styles.socialInfo}>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles", {circles: user.circles})}>
+                        <TouchableOpacity style={styles.socialSection}
+                                          onPress={() => props.navigation.push("Circles", {circles: user.circles})}>
                             <Image source={circles} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>{user.circle_count} Circles</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: user.friends})}>
+                        <TouchableOpacity style={styles.socialSection}
+                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: user.friends})}>
                             <Image source={followers} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>{user.friend_count} Friends</Text>
                         </TouchableOpacity>
@@ -117,7 +112,8 @@ export default function ProfileScreen(props) {
                             <Image source={privacy} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Privacy Policy</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.option} activeOpacity={0.7} onPress={() => resetDisplayName()}>
+                        <TouchableOpacity style={styles.option} activeOpacity={0.7}
+                                          onPress={() => resetDisplayName()}>
                             <Image source={settings} style={[{width: 35, height: 25}]}/>
                             <Text style={[text.h3, text.pepper]}>Settings</Text>
                         </TouchableOpacity>
@@ -180,11 +176,13 @@ export function OtherProfileScreen(props) {
                     </View>
 
                     <View style={styles.socialInfo}>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("Circles")}>
+                        <TouchableOpacity style={styles.socialSection}
+                                          onPress={() => props.navigation.push("Circles", {circles: props.route.params.circles})}>
                             <Image source={circles} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>7 Circles</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.socialSection} onPress={() => props.navigation.push("MembersList", {header: "Friends"})}>
+                        <TouchableOpacity style={styles.socialSection}
+                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: props.route.params.friends})}>
                             <Image source={followers} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>185 Friends</Text>
                         </TouchableOpacity>
