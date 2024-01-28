@@ -3,7 +3,7 @@ import LoginScreen from "./screens/auth/Login";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import ForgotPasswordScreen from "./screens/auth/ForgotPassword";
 import SignUpScreen from "./screens/auth/SignUp";
-import {DeviceEventEmitter, StatusBar, View} from "react-native";
+import {StatusBar, View} from "react-native";
 import NavBar from "./js/navbar";
 import React, {useEffect, useState} from "react";
 import * as Location from 'expo-location';
@@ -16,7 +16,6 @@ import VerifyEmail from "./screens/auth/VerifyEmail";
 import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
 import {getUser} from "../server/user";
-import AddScreen from "./screens/main/Add";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -78,8 +77,6 @@ export default function Index() {
         }
 
         getLocation().then();
-        DeviceEventEmitter.addListener("updateUser", () => forceUpdateUser());
-
         return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
 

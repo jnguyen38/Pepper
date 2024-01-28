@@ -57,8 +57,8 @@ export function CirclesTab(props) {
             <Screen name={"Home"} component={ExploreCircleScreen} initialParams={{user}}/>
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
-            <Screen name={"MembersList"} component={MembersScreen}/>
-            <Screen name={"OtherProfile"} component={OtherProfileScreen}/>
+            <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
+            <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
             <Screen name={"EventsList"} component={EventsList}/>
         </Navigator>
     )
@@ -74,8 +74,8 @@ export function ProfileTab(props) {
             <Screen name={"Home"} component={ProfileScreen} initialParams={{user}}/>
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
-            <Screen name={"MembersList"} component={MembersScreen}/>
-            <Screen name={"OtherProfile"} component={OtherProfileScreen}/>
+            <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
+            <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
             <Screen name={"EventsList"} component={EventsList}/>
         </Navigator>
     )

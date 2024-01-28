@@ -5,6 +5,8 @@ import backArrowPurple from "../../assets/back-arrow-purple.png";
 import {useIsFocused} from "@react-navigation/native";
 import React from "react";
 
+export const PROFILE_QUALITY = 0.1;
+
 export function getFont(size) {
     const fontScale = PixelRatio.getFontScale()
     return size/fontScale;

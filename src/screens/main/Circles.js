@@ -61,18 +61,6 @@ export function CircleScreen(props) {
     )
 }
 
-function CircleList(props) {
-
-
-    return (
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}
-                    showsVerticalScrollIndicator={false}
-                    decelerationRate={"fast"}>
-            <Content {...props} circles={circles}/>
-        </ScrollView>
-    )
-}
-
 
 function Content(props) {
     if (!props.circles) return;
@@ -83,7 +71,7 @@ function Content(props) {
     const circleQueries = useQueries({
         queries: props.circles.map((circle) => {
             return {
-                queryKey: ['circles/', circle],
+                queryKey: ['circle', circle],
                 queryFn: async () => await getCircle(circle),
             }
         }),
@@ -101,6 +89,11 @@ function Content(props) {
 
     if (loading) return <Loading/>
 
+    if (props.circles.length === 0) return (
+        <View style={[styles.circles, {justifyContent: "center"}]}>
+            <Text style={[text.h2, text.lightgrey]}>No Circles Found</Text>
+        </View>
+    )
 
     return (
         <View style={styles.circles}>

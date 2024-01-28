@@ -3,6 +3,7 @@ import {arrayRemove, arrayUnion, doc, getDoc, increment, updateDoc, writeBatch} 
 import {getCircleCover, getCircleLogo, setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
 import {useQuery} from "@tanstack/react-query";
+import {parseDownloadURL} from "../src/js/util";
 
 
 export async function createFirestoreUser(user, username) {
@@ -136,6 +137,21 @@ export async function getCircle(circle) {
         res = res.data()
         res.cover = await getCircleCover(circle)
         res.logo = await getCircleLogo(circle)
+        return res
+    } catch(err) {
+        console.log("Get Circle Error:", err)
+        throw err;
+    }
+}
+
+export async function getMember(member) {
+    const userRef = doc(db, `users/${member}`)
+    console.log("GET USER", member)
+
+    try {
+        let res = await getDoc(userRef)
+        res = res.data()
+        res.photo = await parseDownloadURL(res.photoURL)
         return res
     } catch(err) {
         console.log("Get Circle Error:", err)

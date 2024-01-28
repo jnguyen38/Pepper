@@ -35,7 +35,7 @@
 
 .circles {
     width: 100%;
-    min-height: 100%;
+    min-height: 90%;
     display: flex;
     justify-content: flex-start;
     align-items: center;

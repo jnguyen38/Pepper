@@ -191,7 +191,7 @@ export default function CircleInfoScreen(props) {
                 <View style={styles.infoContainer}>
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Members"})}>
+                                          onPress={() => props.navigation.push("MembersList", {header: "Members", friends: props.route.params.members})}>
                             <Image source={circles} style={styles.socialIcon}/>
                             <Text style={[text.grey, text.h4]}>{props.route.params.member_count} Member{props.route.params.member_count === 1 ? "":"s"}</Text>
                             <Text style={[text.black, text.small]}>12 Friends</Text>

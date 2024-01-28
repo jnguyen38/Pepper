@@ -18,6 +18,7 @@ import MaskInput, {Masks} from "react-native-mask-input";
 import {initializeUserInfo} from "../../server/user";
 import * as ImagePicker from "expo-image-picker";
 import add from "../../assets/add-white.png"
+import {PROFILE_QUALITY} from "../js/util";
 
 export default function InitializeUser(props) {
     const [name, setName] = useState("")
@@ -34,7 +35,7 @@ export default function InitializeUser(props) {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1,1],
-            quality: 0.3,
+            quality: PROFILE_QUALITY,
         })
 
         if (!result.canceled) {
@@ -55,7 +56,7 @@ export default function InitializeUser(props) {
     }
 
     useEffect(() => {
-        setDisabled(!name)
+        setDisabled(!name || !image)
     }, [name])
 
     return (
@@ -70,7 +71,7 @@ export default function InitializeUser(props) {
                 </View>
                 {!image ? (
                     <View style={{width: '100%', display: "flex", alignItems: "center"}}>
-                        <Text style={[text.white, text.smallBold]}>Add a Profile Pic <Text style={[text.white, text.small]}>(Optional)</Text></Text>
+                        <Text style={[text.white, text.smallBold]}>Add a Profile Pic <Text style={[text.white, text.small]}>(Required)</Text></Text>
                     </View>
                 ) : null}
 

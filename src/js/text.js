@@ -6,6 +6,7 @@ module.exports = StyleSheet.create({
     black: {color: "black"},
     red: {color: "red"},
     grey: {color: "#333333"},
+    lightgrey: {color: "#cccccc"},
     pepper: {color: "#6464f6"},
     disabled: {color: "#ffffff22"},
     h1: {

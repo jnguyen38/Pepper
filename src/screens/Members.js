@@ -1,110 +1,16 @@
-import {Image, Pressable, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
+import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";
-import mockPicture from "../../assets/brand/pepper-purple-app-icon.png";
-import {BackButton, CustomSafeAreaView, FocusAwareStatusBar} from "../js/util";
-import {useEffect} from "react";
-
-const members = [
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: true
-    },
-    {
-        name: "Cat Pardi",
-        username: "@cpardi1",
-        friend: true
-    },
-    {
-        name: "Peter Ainsworth",
-        username: "@painsworth6969",
-        friend: true
-    },
-    {
-        name: "Dennis Hutchison",
-        username: "@dhutch28",
-        friend: true
-    },
-    {
-        name: "Lucas Kopp",
-        username: "@lkopp383",
-        friend: true
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: true
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: true
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: true
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: true
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    },
-    {
-        name: "Jonathan Nguyen",
-        username: "@jnguyen38",
-        friend: false
-    }
-]
+import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../js/util";
+import {useEffect, useState} from "react";
+import {useQueries} from "@tanstack/react-query";
+import {getMember} from "../../server/user";
+import {auth} from "../../server/config/config";
 
 export default function MembersScreen(props) {
+    if (!props.route.params.friends) return <Loading/>
+
     return (
         <View style={root.statusBar}>
             <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
@@ -119,7 +25,7 @@ export default function MembersScreen(props) {
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <Content {...props}/>
+                    <Content {...props} members={props.route.params.friends}/>
                 </ScrollView>
             </CustomSafeAreaView>
         </View>
@@ -127,33 +33,68 @@ export default function MembersScreen(props) {
 }
 
 function Content(props) {
+    if (!props.members) return;
+
+    const [members, setMembers] = useState(undefined);
+    const [loading, setLoading] = useState(true)
+
+    const usersQueries = useQueries({
+        queries: props.members.map((user) => {
+            return {
+                queryKey: ['user', user],
+                queryFn: async () => await getMember(user),
+            }
+        }),
+    })
+
+    const allFinished = usersQueries.every(query => query.isSuccess && query.fetchStatus === "idle")
+
+    useEffect( () => {
+        if (allFinished) {
+            let data = usersQueries.map(data => data.data)
+            setMembers(data)
+            setLoading(false)
+        }
+    }, [allFinished])
+
+    if (loading) return <Loading/>
+
+    if (props.members.length === 0) return (
+        <View style={[styles.members, {justifyContent: "center"}]}>
+            <Text style={[text.h2, text.lightgrey]}>No Friends Found</Text>
+        </View>
+    )
+
     return (
         <View style={styles.members}>
-            {members.map((member, index) =>
-                <View style={styles.member} key={index}>
-                    <TouchableOpacity style={styles.toProfile}
-                                      activeOpacity={0.8}
-                                      onPress={() => props.navigation.push("OtherProfile", member)}>
-                        <Image source={mockPicture} style={styles.profilePic}/>
-                        <View style={styles.textHolder}>
-                            <Text style={[text.h4, text.pepper]}>{member.name}</Text>
-                            <Text style={[text.p, text.grey]}>{member.username}</Text>
-                        </View>
-                    </TouchableOpacity>
-                    {
-                        member.friend ? (
-                            <View style={styles.friend}>
-                                <Text style={[text.p, text.white]}>Friends</Text>
-                            </View>
-                        ) : (
-                            <View style={styles.follow}>
-                                <Text style={[text.p, text.pepper]}>Follow</Text>
-                            </View>
-                        )
-                    }
+            {members.map((member, index) => <Member {...props} key={index} member={member}/>)}
+        </View>
+    )
+}
 
+function Member(props) {
+    const [isFriend, setIsFriend] = useState(props.route.params.user.friends.includes(props.member.uid))
 
+    function handleToggleFriend() {
+        setIsFriend(curr => !curr)
+    }
+
+    return (
+        <View style={styles.member}>
+            <TouchableOpacity style={styles.toProfile}
+                              activeOpacity={0.8}
+                              onPress={() => props.navigation.push("OtherProfile", props.member)}>
+                <Image source={{uri: URL.createObjectURL(props.member.photo)}} style={styles.profilePic}/>
+                <View style={styles.textHolder}>
+                    <Text style={[text.h4, text.pepper]}>{props.member.displayName}</Text>
+                    <Text style={[text.p, text.grey]}>@{props.member.username}</Text>
                 </View>
+            </TouchableOpacity>
+            {props.member.uid === auth.currentUser.uid ? null : (
+                <TouchableOpacity style={isFriend ? styles.friend : styles.follow} activeOpacity={0.6}
+                                  onPress={() => handleToggleFriend()}>
+                    <Text style={[text.p, isFriend ? text.white : text.pepper]}>{isFriend ? "Friends" : "Follow"}</Text>
+                </TouchableOpacity>
             )}
         </View>
     )
