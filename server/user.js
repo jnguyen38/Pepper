@@ -59,6 +59,42 @@ export async function resetDisplayName() {
     }
 }
 
+export async function friend(user1, user2) {
+    const user1Ref = doc(db, `users/${user1}`)
+    const user2Ref = doc(db, `users/${user2}`)
+    try {
+        await updateDoc(user1Ref, {
+            friend_count: increment(1),
+            friends: arrayUnion(user2)
+        })
+        await updateDoc(user2Ref, {
+            friend_count: increment(1),
+            friends: arrayUnion(user1)
+        })
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function unfriend(user1, user2) {
+    const user1Ref = doc(db, `users/${user1}`)
+    const user2Ref = doc(db, `users/${user2}`)
+    try {
+        await updateDoc(user1Ref, {
+            friend_count: increment(-1),
+            friends: arrayRemove(user2)
+        })
+        await updateDoc(user2Ref, {
+            friend_count: increment(-1),
+            friends: arrayRemove(user1)
+        })
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
 export async function joinCircle(user, circle) {
     const userRef = doc(db, `users/${user}`)
     try {
@@ -113,17 +149,6 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
         await batch.commit()
         console.log("Initialize User: Success")
     } catch (err) {
-        throw err;
-    }
-}
-
-export async function getCircles(circles) {
-    try {
-        return await Promise.all(circles.map(async circle => {
-            return await getCircle(circle)
-        }))
-    } catch(err) {
-        console.log("Get Circles Error:", err)
         throw err;
     }
 }

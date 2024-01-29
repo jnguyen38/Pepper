@@ -4,8 +4,8 @@ import styles from "../styles/modules/Members.module.css";
 import root from "../styles/Root.module.css";
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../js/util";
 import {useEffect, useState} from "react";
-import {useQueries} from "@tanstack/react-query";
-import {getMember} from "../../server/user";
+import {useQueries, useQueryClient} from "@tanstack/react-query";
+import {friend, getMember, unfriend} from "../../server/user";
 import {auth} from "../../server/config/config";
 
 export default function MembersScreen(props) {
@@ -74,9 +74,21 @@ function Content(props) {
 
 function Member(props) {
     const [isFriend, setIsFriend] = useState(props.route.params.user.friends.includes(props.member.uid))
+    const queryClient = useQueryClient()
 
-    function handleToggleFriend() {
+    async function handleToggleFriend() {
+        const tempIsFriend = isFriend
         setIsFriend(curr => !curr)
+
+        if (tempIsFriend) {
+            await unfriend(props.route.params.user.uid, props.member.uid)
+        } else {
+            await friend(props.route.params.user.uid, props.member.uid)
+        }
+
+        await queryClient.invalidateQueries({queryKey: ["profile", props.route.params.user.uid]})
+        await queryClient.invalidateQueries({queryKey: ["user", props.route.params.user.uid]})
+        await queryClient.invalidateQueries({queryKey: ["user", props.member.uid]})
     }
 
     return (

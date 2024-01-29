@@ -16,19 +16,16 @@ import VerifyEmail from "./screens/auth/VerifyEmail";
 import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
 import {getUser} from "../server/user";
+import {useQuery} from "@tanstack/react-query";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
 
 export default function Index() {
-    const [location, setLocation] = useState(null);
-    const [tab, setTab] = useState(0);
     const [initializing, setInitializing] = useState(true);
     const [authUser, setAuthUser] = useState(undefined);
-    const [user, setUser] = useState(undefined);
     const [emailVerified, setEmailVerified] = useState(false);
     const [displayName, setDisplayName] = useState(undefined);
-    const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     function onAuthStateChangedHandler(newUser) {
         setAuthUser(newUser)
@@ -54,46 +51,31 @@ export default function Index() {
         })
     }
 
-    function forceUpdateUser() {
-        if (authUser)
-            getUser(authUser.uid).then(res => setUser(res))
-    }
-
     function forceDisplayName() {
         setDisplayName(true);
     }
 
     useEffect(() => {
-        async function getLocation() {
-            let {status} = await Location.requestForegroundPermissionsAsync();
-            if (status === "granted") {
-                console.log("Permission granted.");
-            } else {
-                console.warn("Permission denied.");
-            }
-
-            let loc = await Location.getCurrentPositionAsync();
-            setLocation(loc)
-        }
-
-        getLocation().then();
         return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
 
-    useEffect(() => {
-        if (authUser) {
-            getUser(authUser.uid).then(res => {
-                setUser(res);
-                console.log("Index loaded", res)
-            })
-        }
-    }, [authUser])
+    if (initializing)
+        return <Loading/>
 
-    if (initializing) return (
-        <Loading/>
-    )
+    if (!authUser)
+        return <Unauthenticated/>
 
-    if (!authUser) return (
+    if (!emailVerified)
+        return <VerifyEmail user={authUser} forceReload={forceUpdateAuthUser}/>
+
+    if (!displayName)
+        return <InitializeUser user={authUser} forceReload={forceDisplayName}/>
+
+    return <Authenticated authUser={authUser}/>
+}
+
+function Unauthenticated() {
+    return (
         <NavigationContainer>
             <StatusBar barStyle={"light-content"}/>
             <LoginStack.Navigator screenOptions={{headerShown: false}}>
@@ -104,14 +86,42 @@ export default function Index() {
             </LoginStack.Navigator>
         </NavigationContainer>
     )
+}
 
-    if (!emailVerified) return (
-        <VerifyEmail user={authUser} forceReload={forceUpdateAuthUser}/>
-    )
+function Authenticated(props) {
+    const [tab, setTab] = useState(0);
+    const [location, setLocation] = useState(null);
+    const [user, setUser] = useState(undefined);
+    const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
-    if (!displayName) return (
-        <InitializeUser user={authUser} forceReload={forceDisplayName}/>
-    )
+    const userQuery = useQuery({
+        queryKey: ['init'],
+        queryFn: async () => {
+            console.log("Init Query")
+            return getUser(props.authUser.uid)
+        }
+    })
+
+    function forceUpdateUser() {
+        getUser(props.authUser.uid).then(res => setUser(res))
+    }
+
+    useEffect(() => {
+        async function getLocation() {
+            let {status} = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                console.warn("Location permission denied.");
+            }
+
+            let loc = await Location.getCurrentPositionAsync();
+            setLocation(loc)
+        }
+
+        getLocation().then();
+    }, [])
+
+    if (userQuery.isLoading)
+        return <Loading/>
 
     return (
         <NavigationContainer>
@@ -123,16 +133,16 @@ export default function Index() {
                                screenOptions={{headerShown: false}}>
                     <Tab.Screen name={tabs[0]}
                                 component={HomeTab}
-                                initialParams={{location, user}}/>
+                                initialParams={{location: location, user: userQuery.data}}/>
                     <Tab.Screen name={tabs[1]}
-                                component={SearchTab} initialParams={{user}}/>
+                                component={SearchTab} initialParams={{user: userQuery.data}}/>
                     <Tab.Screen name={tabs[2]}>
                         {props => <AddTab user={user} forceUpadateUser={forceUpdateUser}/>}
                     </Tab.Screen>
                     <Tab.Screen name={tabs[3]}
-                                component={CirclesTab} initialParams={{user}}/>
+                                component={CirclesTab} initialParams={{user: userQuery.data}}/>
                     <Tab.Screen name={tabs[4]}
-                                component={ProfileTab} initialParams={{user}}/>
+                                component={ProfileTab} initialParams={{user: userQuery.data}}/>
                 </Tab.Navigator>
             </View>
         </NavigationContainer>

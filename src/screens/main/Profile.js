@@ -29,9 +29,10 @@ import {auth} from "../../../server/config/config";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
 import {setProfilePicture} from "../../../server/storage";
+import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
 
 export default function ProfileScreen(props) {
-    const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false)
     const [authUser] = useState(auth.currentUser)
     const [edited, setEdited] = useState(false)
     const [profilePic, setProfilePic] = useState(undefined)
@@ -90,8 +91,12 @@ export default function ProfileScreen(props) {
                 <ScrollView contentContainerStyle={styles.profileContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <View style={styles.profilePic}>
-                        <Image source={{uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)}} style={styles.profilePicImg}/>
+                    <View style={[styles.profilePic]}>
+                        <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: "profile", uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)})}>
+                            <Animated.Image source={{uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)}}
+                                            sharedTransitionTag={`image-profile`}
+                                            style={styles.profilePicImg}/>
+                        </TouchableOpacity>
                         <TouchableOpacity style={styles.edit} onPress={pickImage} activeOpacity={0.8}>
                             <LinearGradient colors={['#3a6cf0', '#652cd2']}
                                             start={{x: 1, y: 1}}
@@ -166,6 +171,7 @@ export default function ProfileScreen(props) {
 
 export function OtherProfileScreen(props) {
     const [isFriend, setIsFriend] = useState(props.route.params.user.friends.includes(props.route.params.uid))
+    const id = Math.random().toString(16).slice(2)
 
     function handleCreationTime() {
         const arr = props.route.params.creationTime.toString().split(" ")
@@ -189,7 +195,11 @@ export function OtherProfileScreen(props) {
                     <StatusBar barStyle={"dark-content"}/>
 
                     <View style={styles.profilePic}>
-                        <Image source={{uri: URL.createObjectURL(props.route.params.photo)}} style={styles.profilePicImg}/>
+                        <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: id, uri: URL.createObjectURL(props.route.params.photo)})}>
+                            <Animated.Image source={{uri: URL.createObjectURL(props.route.params.photo)}}
+                                            sharedTransitionTag={`image-${id}`}
+                                            style={styles.profilePicImg}/>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.textContainer}>

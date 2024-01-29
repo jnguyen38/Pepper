@@ -1,8 +1,10 @@
 import {
-    ActivityIndicator, DeviceEventEmitter,
+    ActivityIndicator,
     Dimensions,
-    Image, Keyboard,
-    ScrollView, Switch,
+    Image,
+    Keyboard,
+    ScrollView,
+    Switch,
     Text,
     TextInput,
     TouchableOpacity,
@@ -36,7 +38,6 @@ export default function AddScreen(props) {
     const scrollOffset = useScrollViewOffset(scrollRef);
 
     const dots = [0, 1, 2];
-
 
     return (
         <View style={root.statusBar}>

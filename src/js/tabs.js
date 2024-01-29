@@ -8,6 +8,7 @@ import CircleInfoScreen from "../screens/CircleInfo";
 import MembersScreen from "../screens/Members";
 import EventsList from "../screens/Events";
 import NewCircle from "../screens/NewCircle";
+import ProfilePreview from "../screens/ProfilePreview";
 
 export function HomeTab({route}) {
     const {Navigator, Screen} = createNativeStackNavigator();
@@ -60,6 +61,7 @@ export function CirclesTab(props) {
             <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
             <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
             <Screen name={"EventsList"} component={EventsList}/>
+            <Screen name={"ProfilePreview"} component={ProfilePreview} options={{animation: "fade", animationDuration: 500}}/>
         </Navigator>
     )
 }
@@ -77,6 +79,7 @@ export function ProfileTab(props) {
             <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
             <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
             <Screen name={"EventsList"} component={EventsList}/>
+            <Screen name={"ProfilePreview"} component={ProfilePreview} options={{animation: "fade", animationDuration: 500}}/>
         </Navigator>
     )
 }
