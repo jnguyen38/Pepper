@@ -15,7 +15,7 @@ import ResetConfirmationScreen from "./screens/auth/ResetConfirmation";
 import VerifyEmail from "./screens/auth/VerifyEmail";
 import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
-import {getUser} from "../server/user";
+import {getUser, listenUserCircles, listenUserFriends} from "../server/user";
 import {useQuery} from "@tanstack/react-query";
 
 const LoginStack = createNativeStackNavigator();
@@ -92,13 +92,15 @@ function Authenticated(props) {
     const [tab, setTab] = useState(0);
     const [location, setLocation] = useState(null);
     const [user, setUser] = useState(undefined);
+    const [friends, setFriends] = useState(undefined);
+    const [circles, setCircles] = useState(undefined);
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     const userQuery = useQuery({
         queryKey: ['init'],
         queryFn: async () => {
-            console.log("Init Query")
-            return getUser(props.authUser.uid)
+            console.log("Init Query Called")
+            return await getUser(props.authUser.uid)
         }
     })
 
@@ -106,21 +108,31 @@ function Authenticated(props) {
         getUser(props.authUser.uid).then(res => setUser(res))
     }
 
-    useEffect(() => {
-        async function getLocation() {
-            let {status} = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                console.warn("Location permission denied.");
-            }
-
-            let loc = await Location.getCurrentPositionAsync();
-            setLocation(loc)
+    async function getLocation() {
+        let {status} = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+            console.warn("Location permission denied.");
         }
 
+        let loc = await Location.getCurrentPositionAsync();
+        setLocation(loc)
+    }
+
+
+
+    useEffect(() => {
         getLocation().then();
+
+        const unsubscribeFriends = listenUserFriends(setFriends)
+        const unsubscribeCircles = listenUserCircles(setCircles)
+
+        return () => {
+            unsubscribeFriends()
+            unsubscribeCircles()
+        }
     }, [])
 
-    if (userQuery.isLoading)
+    if (userQuery.isLoading || userQuery.isFetching || !friends || !circles)
         return <Loading/>
 
     return (
@@ -142,7 +154,7 @@ function Authenticated(props) {
                     <Tab.Screen name={tabs[3]}
                                 component={CirclesTab} initialParams={{user: userQuery.data}}/>
                     <Tab.Screen name={tabs[4]}
-                                component={ProfileTab} initialParams={{user: userQuery.data}}/>
+                                component={ProfileTab} initialParams={{user: userQuery.data, friends, circles}}/>
                 </Tab.Navigator>
             </View>
         </NavigationContainer>

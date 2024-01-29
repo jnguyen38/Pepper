@@ -3,6 +3,7 @@ import {LinearGradient} from "expo-linear-gradient";
 import text from "../../js/text";
 import styles from "../../styles/modules/main/Circles.module.css";
 import root from "../../styles/Root.module.css";
+import pepper from "../../../assets/email-sent.png";
 
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading, nFormatter} from "../../js/util";
 import {useEffect, useState} from "react";
@@ -97,22 +98,26 @@ function Content(props) {
 
     return (
         <View style={styles.circles}>
-            {circles.map((item, index) => (
-                <View style={styles.circle} key={index}>
-                    <Image source={{uri: URL.createObjectURL(item.cover)}} style={styles.circleImage}/>
+            {circles.map((circle, index) => <Circle {...props} circle={circle} key={index}/>)}
+        </View>
+    )
+}
 
-                    <LinearGradient colors={['#3971f6aa', '#9028ccaa']}
-                                    start={{x: 0, y: 1}}
-                                    end={{x: 1, y: 0}}
-                                    style={[root.linearBackground, root.rounded10]}/>
+function Circle(props) {
+    return (
+        <View style={styles.circle}>
+            <Image source={{uri: URL.createObjectURL(props.circle.cover)}} style={styles.circleImage}/>
 
-                    <TouchableOpacity style={styles.circleText} activeOpacity={0.8}
-                                      onPress={() => props.navigation.push("CircleInfo", item)}>
-                        <Text style={[text.h1, text.white, {textAlign: "center"}]}>{item.title}</Text>
-                        <Text style={[text.p, text.white]}>{nFormatter(item.member_count, 1)} member{item.member_count === 1 ? "":"s"}</Text>
-                    </TouchableOpacity>
-                </View>
-            ))}
+            <LinearGradient colors={['#3971f6aa', '#9028ccaa']}
+                            start={{x: 0, y: 1}}
+                            end={{x: 1, y: 0}}
+                            style={[root.linearBackground, root.rounded10]}/>
+
+            <TouchableOpacity style={styles.circleText} activeOpacity={0.8}
+                              onPress={() => props.navigation.push("CircleInfo", props.circle)}>
+                <Text style={[text.h1, text.white, {textAlign: "center"}]}>{props.circle.title}</Text>
+                <Text style={[text.p, text.white]}>{nFormatter(props.circle.member_count, 1)} member{props.circle.member_count === 1 ? "":"s"}</Text>
+            </TouchableOpacity>
         </View>
     )
 }

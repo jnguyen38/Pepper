@@ -16,7 +16,7 @@ import edit from "../../../assets/profile/edit.png";
 import phone from "../../../assets/profile/phone.png";
 import mail from "../../../assets/profile/mail.png";
 import joined from "../../../assets/profile/joined.png";
-import circles from "../../../assets/profile/circlesPurple.png";
+import circlesImg from "../../../assets/profile/circlesPurple.png";
 import followers from "../../../assets/profile/followersPurple.png";
 import logout from "../../../assets/profile/logout-slim.png";
 import settings from "../../../assets/profile/settings.png";
@@ -29,7 +29,7 @@ import {auth} from "../../../server/config/config";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
 import {setProfilePicture} from "../../../server/storage";
-import Animated, {useAnimatedStyle, useSharedValue, withTiming} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false)
@@ -37,6 +37,8 @@ export default function ProfileScreen(props) {
     const [edited, setEdited] = useState(false)
     const [profilePic, setProfilePic] = useState(undefined)
     const user = props.route.params.user;
+    const circles = props.route.params.circles;
+    const friends = props.route.params.friends;
     const queryClient = useQueryClient();
 
     const profilePictureQuery = useQuery({
@@ -131,13 +133,13 @@ export default function ProfileScreen(props) {
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection}
                                           onPress={() => props.navigation.push("Circles", {circles: user.circles})}>
-                            <Image source={circles} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{user.circle_count} Circle{user.circle_count === 1 ? "" : "s"}</Text>
+                            <Image source={circlesImg} style={styles.socialIcon}/>
+                            <Text style={[text.pepper, text.h4]}>{circles.length} Circle{user.circle_count === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.socialSection}
                                           onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: user.friends})}>
                             <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{user.friend_count} Friend{user.friend_count === 1 ? "" : "s"}</Text>
+                            <Text style={[text.pepper, text.h4]}>{friends.length} Friend{user.friend_count === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -234,7 +236,7 @@ export function OtherProfileScreen(props) {
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection}
                                           onPress={() => props.navigation.push("Circles", {circles: props.route.params.circles})}>
-                            <Image source={circles} style={styles.socialIcon}/>
+                            <Image source={circlesImg} style={styles.socialIcon}/>
                             <Text style={[text.pepper, text.h4]}>{props.route.params.circle_count} Circle{props.route.params.circle_count === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.socialSection}

@@ -86,6 +86,7 @@ function Member(props) {
             await friend(props.route.params.user.uid, props.member.uid)
         }
 
+        await queryClient.invalidateQueries({queryKey: ["init"]})
         await queryClient.invalidateQueries({queryKey: ["profile", props.route.params.user.uid]})
         await queryClient.invalidateQueries({queryKey: ["user", props.route.params.user.uid]})
         await queryClient.invalidateQueries({queryKey: ["user", props.member.uid]})

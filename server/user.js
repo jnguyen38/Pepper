@@ -1,5 +1,17 @@
 import {updateProfile} from "firebase/auth";
-import {arrayRemove, arrayUnion, doc, getDoc, increment, updateDoc, writeBatch} from "firebase/firestore"
+import {
+    addDoc,
+    arrayRemove,
+    arrayUnion,
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    increment,
+    updateDoc,
+    writeBatch,
+    onSnapshot
+} from "firebase/firestore"
 import {getCircleCover, getCircleLogo, setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
 import {useQuery} from "@tanstack/react-query";
@@ -49,6 +61,54 @@ export async function getUser(uid) {
     }
 }
 
+export async function getUserFriends(uid) {
+    try {
+        const colRef = collection(db, "users", uid, "friends")
+        const unsubscribe = onSnapshot(colRef, snapshot => {
+            let ids = []
+            snapshot.forEach(doc => {
+                console.log("Friend doc", doc.id)
+                ids.push(doc.id)
+            })
+            return ids
+        })
+        return unsubscribe
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export function listenUserFriends(setState) {
+    const colRef = collection(db, "users", auth.currentUser.uid, "friends")
+    return onSnapshot(colRef, snapshot => {
+        let ids = snapshot.docs.map(doc => doc.id)
+        console.log("Friend ids", ids)
+        setState(ids)
+    })
+}
+
+export function listenUserCircles(setState) {
+    const colRef = collection(db, "users", auth.currentUser.uid, "circles")
+    return onSnapshot(colRef, snapshot => {
+        let ids = snapshot.docs.map(doc => doc.id)
+        console.log("Circle ids", ids)
+        setState(ids)
+    })
+}
+
+export async function getUserCircles(uid) {
+    try {
+        const docRef = doc(db, "users", uid, "circles")
+        const docSnap = await getDocs(docRef)
+        return docSnap.data()
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+
 export async function resetDisplayName() {
     const user = auth.currentUser;
     try {
@@ -96,12 +156,9 @@ export async function unfriend(user1, user2) {
 }
 
 export async function joinCircle(user, circle) {
-    const userRef = doc(db, `users/${user}`)
+    const userRef = doc(db, `users/${user}/circles`)
     try {
-        await updateDoc(userRef, {
-            circle_count: increment(1),
-            circles: arrayUnion(circle)
-        })
+        await addDoc(circle, {})
     } catch (err) {
         console.warn(err.message);
         throw err;
