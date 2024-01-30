@@ -76,6 +76,10 @@ function Member(props) {
     const [isFriend, setIsFriend] = useState(friends.includes(props.member.uid))
     const queryClient = useQueryClient()
 
+    useEffect(() => {
+        setIsFriend(friends.includes(props.member.uid))
+    }, [friends])
+
 
     async function handleToggleFriend() {
         const tempIsFriend = isFriend

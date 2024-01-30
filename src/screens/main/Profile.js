@@ -22,7 +22,7 @@ import logout from "../../../assets/profile/logout-slim.png";
 import settings from "../../../assets/profile/settings.png";
 import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
 import {friend, getUserCircles, getUserFriends, resetDisplayName, unfriend} from "../../../server/user";
 import {auth} from "../../../server/config/config";
@@ -206,6 +206,10 @@ export function OtherProfileScreen(props) {
 
         await queryClient.invalidateQueries({queryKey: ["friends", memberId]})
     }
+
+    useEffect(() => {
+        setIsFriend(friends.includes(memberId))
+    }, [friends])
 
     if (friendQuery.isLoading || circleQuery.isLoading)
         return <Loading/>
