@@ -9,9 +9,10 @@ import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading, nFormatter
 import {useEffect, useState} from "react";
 import {getCircle} from "../../../server/user";
 import {useQueries} from "@tanstack/react-query";
+import {useCircleStore} from "../../js/zustand";
 
 export default function ExploreCircleScreen(props) {
-    if (!props.route.params.user) return;
+    const circles = useCircleStore(s => s.circles)
 
     return (
         <View style={root.statusBar}>
@@ -31,7 +32,7 @@ export default function ExploreCircleScreen(props) {
                         <Text style={[text.p, text.white]}>See what your friends are up to</Text>
                     </View>
 
-                    <Content {...props} circles={props.route.params.user.circles}/>
+                    <Content {...props} circles={circles}/>
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -39,7 +40,7 @@ export default function ExploreCircleScreen(props) {
 }
 
 export function CircleScreen(props) {
-    if (!props.route.params.circles) return;
+    const circles = props.route.params.circles;
 
     return (
         <View style={root.statusBar}>
@@ -54,7 +55,7 @@ export function CircleScreen(props) {
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <Content {...props} circles={props.route.params.circles}/>
+                    <Content {...props} circles={circles}/>
                 </ScrollView>
             </CustomSafeAreaView>
         </View>

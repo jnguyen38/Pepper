@@ -24,12 +24,13 @@ import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
 import {useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
-import {resetDisplayName} from "../../../server/user";
+import {friend, getUserCircles, getUserFriends, resetDisplayName, unfriend} from "../../../server/user";
 import {auth} from "../../../server/config/config";
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import * as ImagePicker from "expo-image-picker";
 import {setProfilePicture} from "../../../server/storage";
 import Animated from "react-native-reanimated";
+import {useCircleStore, useFriendStore} from "../../js/zustand";
 
 export default function ProfileScreen(props) {
     const [showModal, setShowModal] = useState(false)
@@ -37,8 +38,8 @@ export default function ProfileScreen(props) {
     const [edited, setEdited] = useState(false)
     const [profilePic, setProfilePic] = useState(undefined)
     const user = props.route.params.user;
-    const circles = props.route.params.circles;
-    const friends = props.route.params.friends;
+    const circles = useCircleStore(s => s.circles)
+    const friends = useFriendStore(s => s.friends)
     const queryClient = useQueryClient();
 
     const profilePictureQuery = useQuery({
@@ -61,7 +62,8 @@ export default function ProfileScreen(props) {
         if (!result.canceled) {
             setProfilePic(result.assets[0].uri)
             console.log(typeof (result.assets[0]))
-            // Use profile picture in cache, set profile picture, and invalidate profile query
+
+            // Use profile picture in state, set profile picture, and invalidate profile query
             setEdited(true)
             await setProfilePicture(result.assets[0].uri, auth.currentUser.uid)
             await queryClient.invalidateQueries({queryKey: ['profile', authUser.uid]})
@@ -81,19 +83,18 @@ export default function ProfileScreen(props) {
         return `${arr[2]} ${arr[3]}`
     }
 
-    if (!user || profilePictureQuery.isPending) return (
-        <Loading/>
-    )
+    if (!user || profilePictureQuery.isPending)
+        return <Loading/>
 
     return (
-        <View style={[root.statusBar]}>
+        <View style={root.statusBar}>
             <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
 
             <SafeAreaView>
                 <ScrollView contentContainerStyle={styles.profileContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <View style={[styles.profilePic]}>
+                    <View style={styles.profilePic}>
                         <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: "profile", uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)})}>
                             <Animated.Image source={{uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)}}
                                             sharedTransitionTag={`image-profile`}
@@ -132,14 +133,14 @@ export default function ProfileScreen(props) {
 
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("Circles", {circles: user.circles})}>
+                                          onPress={() => props.navigation.push("Circles", {circles: circles})}>
                             <Image source={circlesImg} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{circles.length} Circle{user.circle_count === 1 ? "" : "s"}</Text>
+                            <Text style={[text.pepper, text.h4]}>{circles.length} Circle{circles.length === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: user.friends})}>
+                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: friends})}>
                             <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{friends.length} Friend{user.friend_count === 1 ? "" : "s"}</Text>
+                            <Text style={[text.pepper, text.h4]}>{friends.length} Friend{friends.length === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -172,20 +173,45 @@ export default function ProfileScreen(props) {
 }
 
 export function OtherProfileScreen(props) {
-    const [isFriend, setIsFriend] = useState(props.route.params.user.friends.includes(props.route.params.uid))
-    const id = Math.random().toString(16).slice(2)
+    const friends = useFriendStore(s => s.friends)
+    const memberId = props.route.params.uid
+    const sharedElementId = Math.random().toString(16).slice(2)
+    const queryClient = useQueryClient()
+    const [isFriend, setIsFriend] = useState(friends.includes(memberId))
+
+    const friendQuery = useQuery({
+        queryKey: ['friends', memberId],
+        queryFn: async () => await getUserFriends(memberId)
+    })
+
+    const circleQuery = useQuery({
+        queryKey: ['circles', memberId],
+        queryFn: async () => await getUserCircles(memberId)
+    })
 
     function handleCreationTime() {
         const arr = props.route.params.creationTime.toString().split(" ")
         return `${arr[2]} ${arr[3]}`
     }
 
-    function handleToggleFriend() {
+    async function handleToggleFriend(){
+        const tempIsFriend = isFriend
         setIsFriend(curr => !curr)
+
+        if (tempIsFriend) {
+            await unfriend(props.route.params.user.uid, memberId)
+        } else {
+            await friend(props.route.params.user.uid, memberId)
+        }
+
+        await queryClient.invalidateQueries({queryKey: ["friends", memberId]})
     }
 
+    if (friendQuery.isLoading || circleQuery.isLoading)
+        return <Loading/>
+
     return (
-        <View style={[root.statusBar]}>
+        <View style={root.statusBar}>
             <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
 
             <CustomSafeAreaView>
@@ -197,9 +223,9 @@ export function OtherProfileScreen(props) {
                     <StatusBar barStyle={"dark-content"}/>
 
                     <View style={styles.profilePic}>
-                        <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: id, uri: URL.createObjectURL(props.route.params.photo)})}>
+                        <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: sharedElementId, uri: URL.createObjectURL(props.route.params.photo)})}>
                             <Animated.Image source={{uri: URL.createObjectURL(props.route.params.photo)}}
-                                            sharedTransitionTag={`image-${id}`}
+                                            sharedTransitionTag={`image-${sharedElementId}`}
                                             style={styles.profilePicImg}/>
                         </TouchableOpacity>
                     </View>
@@ -235,14 +261,14 @@ export function OtherProfileScreen(props) {
 
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("Circles", {circles: props.route.params.circles})}>
+                                          onPress={() => props.navigation.push("Circles", {circles: circleQuery.data})}>
                             <Image source={circlesImg} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{props.route.params.circle_count} Circle{props.route.params.circle_count === 1 ? "" : "s"}</Text>
+                            <Text style={[text.pepper, text.h4]}>{circleQuery.data.length} Circle{circleQuery.data.length === 1 ? "" : "s"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: props.route.params.friends})}>
+                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: friendQuery.data})}>
                             <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{props.route.params.friend_count} Friend{props.route.params.friend_count === 1 ? "" : "s"}</Text>
+                            <Text style={[text.pepper, text.h4]}>{friendQuery.data.length} Friend{friendQuery.data.length === 1 ? "" : "s"}</Text>
 
                         </TouchableOpacity>
                     </View>

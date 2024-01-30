@@ -17,6 +17,7 @@ import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
 import {getUser, listenUserCircles, listenUserFriends} from "../server/user";
 import {useQuery} from "@tanstack/react-query";
+import {useCircleStore, useFriendStore} from "./js/zustand";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -92,8 +93,10 @@ function Authenticated(props) {
     const [tab, setTab] = useState(0);
     const [location, setLocation] = useState(null);
     const [user, setUser] = useState(undefined);
-    const [friends, setFriends] = useState(undefined);
-    const [circles, setCircles] = useState(undefined);
+    const friends = useFriendStore(state => state.friends)
+    const setFriends = useFriendStore(state => state.setFriends)
+    const circles = useCircleStore(state => state.circles)
+    const setCircles = useCircleStore(state => state.setCircles)
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     const userQuery = useQuery({
@@ -117,8 +120,6 @@ function Authenticated(props) {
         let loc = await Location.getCurrentPositionAsync();
         setLocation(loc)
     }
-
-
 
     useEffect(() => {
         getLocation().then();
@@ -154,7 +155,7 @@ function Authenticated(props) {
                     <Tab.Screen name={tabs[3]}
                                 component={CirclesTab} initialParams={{user: userQuery.data}}/>
                     <Tab.Screen name={tabs[4]}
-                                component={ProfileTab} initialParams={{user: userQuery.data, friends, circles}}/>
+                                component={ProfileTab} initialParams={{user: userQuery.data}}/>
                 </Tab.Navigator>
             </View>
         </NavigationContainer>

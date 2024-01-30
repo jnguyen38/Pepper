@@ -7,9 +7,10 @@ import {useEffect, useState} from "react";
 import {useQueries, useQueryClient} from "@tanstack/react-query";
 import {friend, getMember, unfriend} from "../../server/user";
 import {auth} from "../../server/config/config";
+import {useFriendStore} from "../js/zustand";
 
 export default function MembersScreen(props) {
-    if (!props.route.params.friends) return <Loading/>
+    const friends = props.route.params.friends
 
     return (
         <View style={root.statusBar}>
@@ -19,13 +20,13 @@ export default function MembersScreen(props) {
                 <BackButton transparent={true} light={true} safeView={true} {...props}/>
 
                 <View style={styles.header}>
-                    <Text style={[text.h2, text.pepper]}>{props.route.params?.header}</Text>
+                    <Text style={[text.h2, text.pepper]}>{props.route.params.header}</Text>
                 </View>
 
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <Content {...props} members={props.route.params.friends}/>
+                    <Content {...props} members={friends}/>
                 </ScrollView>
             </CustomSafeAreaView>
         </View>
@@ -33,8 +34,6 @@ export default function MembersScreen(props) {
 }
 
 function Content(props) {
-    if (!props.members) return;
-
     const [members, setMembers] = useState(undefined);
     const [loading, setLoading] = useState(true)
 
@@ -73,8 +72,10 @@ function Content(props) {
 }
 
 function Member(props) {
-    const [isFriend, setIsFriend] = useState(props.route.params.user.friends.includes(props.member.uid))
+    const friends = useFriendStore(s => s.friends)
+    const [isFriend, setIsFriend] = useState(friends.includes(props.member.uid))
     const queryClient = useQueryClient()
+
 
     async function handleToggleFriend() {
         const tempIsFriend = isFriend
@@ -86,10 +87,7 @@ function Member(props) {
             await friend(props.route.params.user.uid, props.member.uid)
         }
 
-        await queryClient.invalidateQueries({queryKey: ["init"]})
-        await queryClient.invalidateQueries({queryKey: ["profile", props.route.params.user.uid]})
-        await queryClient.invalidateQueries({queryKey: ["user", props.route.params.user.uid]})
-        await queryClient.invalidateQueries({queryKey: ["user", props.member.uid]})
+        await queryClient.invalidateQueries({queryKey: ["friends", props.member.uid]})
     }
 
     return (
