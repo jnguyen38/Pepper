@@ -1,18 +1,21 @@
-import {Image, Pressable, StatusBar, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import text from "../js/text";
 import styles from "../styles/modules/CircleInfo.module.css";
 import root from "../styles/Root.module.css";
 import Animated, {interpolate, useAnimatedRef, useAnimatedStyle, useScrollViewOffset} from "react-native-reanimated";
 import {LinearGradient} from "expo-linear-gradient";
-import circles from "../../assets/profile/circlesPurple.png";
+import circlesImg from "../../assets/profile/circlesPurple.png";
 import events from "../../assets/events.png";
 import reply from "../../assets/reply.png";
 import {BackButton, FocusAwareStatusBar, Loading} from "../js/util";
 import settings from "../../assets/settings-white.png"
 import {auth} from "../../server/config/config";
 import {useEffect, useState} from "react";
+import {useCircleStore, useFriendStore} from "../js/zustand";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {getCircleMembers, joinCircle, leaveCircle} from "../../server/user";
 
-const IMG_HEIGHT = 250;
+const IMG_HEIGHT = 275;
 
 const postData = [
     {
@@ -145,6 +148,16 @@ const postData = [
 export default function CircleInfoScreen(props) {
     const scrollRef = useAnimatedRef();
     const scrollOffset = useScrollViewOffset(scrollRef);
+    const circles = useCircleStore(s => s.circles);
+    const friends = useFriendStore(s => s.friends);
+    const circleId = props.route.params.id
+    const [isMember, setIsMember] = useState(circles.includes(circleId))
+    const queryClient = useQueryClient()
+
+    const membersQuery = useQuery({
+        queryKey: ["members", circleId],
+        queryFn: async () => await getCircleMembers(circleId)
+    })
 
     const imageAnimatedStyle = useAnimatedStyle(() => {
         return {
@@ -167,6 +180,28 @@ export default function CircleInfoScreen(props) {
         };
     })
 
+    async function handleToggleJoin() {
+        const tempIsMember = isMember
+        setIsMember(curr => !curr)
+
+        if (tempIsMember) {
+            await leaveCircle(auth.currentUser.uid, circleId)
+        } else {
+            await joinCircle(auth.currentUser.uid, circleId)
+        }
+
+        await queryClient.invalidateQueries({queryKey: ['members', circleId]})
+    }
+
+    useEffect(() => {
+        setIsMember(circles.includes(circleId))
+    }, [circles])
+
+    if (!membersQuery)
+        return <Loading/>
+
+    const mutualFriends = friends.filter(friend => membersQuery.data.includes(friend));
+
     return (
         <View style={styles.screen}>
             <BackButton {...props}/>
@@ -186,15 +221,19 @@ export default function CircleInfoScreen(props) {
                     <Image source={{uri: URL.createObjectURL(props.route.params.cover)}} style={[styles.backgroundImage]}/>
                     <Text style={[text.pItalics, text.white, {zIndex: 10}]}>{props.route.params.community}</Text>
                     <Text style={[text.h1, text.white, {zIndex: 10, textAlign: "center"}]}>{props.route.params.title}</Text>
+                    <TouchableOpacity style={isMember ? styles.joined : styles.join} activeOpacity={0.6}
+                                      onPress={() => handleToggleJoin()}>
+                        <Text style={[text.descRegular, isMember ? text.white : text.pepper]}>{isMember ? "Member" : "Join"}</Text>
+                    </TouchableOpacity>
                 </Animated.View>
 
                 <View style={styles.infoContainer}>
                     <View style={styles.socialInfo}>
                         <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Members", friends: props.route.params.members})}>
-                            <Image source={circles} style={styles.socialIcon}/>
-                            <Text style={[text.grey, text.h4]}>{props.route.params.member_count} Member{props.route.params.member_count === 1 ? "":"s"}</Text>
-                            <Text style={[text.black, text.small]}>12 Friends</Text>
+                                          onPress={() => props.navigation.push("MembersList", {header: "Members", friends: membersQuery.data})}>
+                            <Image source={circlesImg} style={styles.socialIcon}/>
+                            <Text style={[text.grey, text.h4]}>{membersQuery.data.length} Member{membersQuery.data.length === 1 ? "":"s"}</Text>
+                            <Text style={[text.black, text.small]}>{mutualFriends.length} Friend{mutualFriends.length === 1 ? "":"s"}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.socialSection} activeOpacity={0.8}
                                           onPress={() => props.navigation.push("EventsList")}>

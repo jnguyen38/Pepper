@@ -144,35 +144,11 @@ export async function friend(user1, user2) {
  * @returns {Promise<void>} No return value
  */
 export async function unfriend(user1, user2) {
-    const user1Ref = doc(db, 'users', user1, 'friends', user2)
-    const user2Ref = doc(db, 'users', user2, 'friends', user1)
+    const user1Ref = doc(db, `users/${user1}/friends/${user2}`)
+    const user2Ref = doc(db, `users/${user2}/friends/${user1}`)
     try {
         await deleteDoc(user1Ref)
         await deleteDoc(user2Ref)
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
-
-export async function joinCircle(user, circle) {
-    const userRef = doc(db, `users/${user}/circles`)
-    try {
-        await addDoc(circle, {})
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
-export async function leaveCircle(user, circle) {
-    const userRef = doc(db, `users/${user}`)
-    try {
-        await updateDoc(userRef, {
-            circle_count: increment(-1),
-            circles: arrayRemove(circle)
-        })
     } catch (err) {
         console.warn(err.message);
         throw err;
@@ -217,20 +193,33 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
     }
 }
 
-export async function getCircle(circle) {
-    const circleRef = doc(db, `circles/${circle}`)
-    console.log("GET CIRCLE", circle)
+/***
+ * Retrieve circle data given circleId. Called with "circle" query on explore/circle pages
+ *
+ * @param circleId
+ * @returns {Promise<DocumentData>}
+ */
+export async function getCircle(circleId) {
+    const circleRef = doc(db, `circles/${circleId}`)
+    console.log("GET CIRCLE", circleId)
 
     try {
         let res = await getDoc(circleRef)
         res = res.data()
-        res.cover = await getCircleCover(circle)
-        res.logo = await getCircleLogo(circle)
+        res.cover = await getCircleCover(circleId)
+        res.logo = await getCircleLogo(circleId)
+        res.id = circleId;
         return res
     } catch(err) {
-        console.log("Get Circle Error:", err)
+        console.warn("Get Circle Error:", err)
         throw err;
     }
+}
+
+export async function getCircleMembers(circleId) {
+    const membersCol = collection(db, `circles/${circleId}/members`)
+    const log = `GET CIRCLE MEMBERS ${circleId}`
+    return await getAllDocsFromCollection(membersCol, log)
 }
 
 export async function getMember(userId) {
@@ -243,37 +232,56 @@ export async function getMember(userId) {
         res.photo = await parseDownloadURL(res.photoURL)
         return res
     } catch(err) {
-        console.log("Get Circle Error:", err)
+        console.warn("Get Circle Error:", err)
         throw err;
     }
 }
 
 export async function getUserFriends(userId) {
     const friendsCol = collection(db, `users/${userId}/friends`)
-    console.log("GET USER FRIENDS", userId)
-
-    try {
-        const docs = await getDocs(friendsCol)
-        const ids = []
-        docs.forEach(doc => ids.push(doc.id))
-        return ids
-    } catch(err) {
-        console.log("Get Circle Error:", err)
-        throw err;
-    }
+    const log = `GET USER FRIENDS ${userId}`
+    return await getAllDocsFromCollection(friendsCol, log)
 }
 
 export async function getUserCircles(userId) {
     const circlesCol = collection(db, `users/${userId}/circles`)
-    console.log("GET USER CIRCLES", userId)
+    const log = `GET USER CIRCLES ${userId}`
+    return await getAllDocsFromCollection(circlesCol, log);
+}
 
+export async function joinCircle(user, circle) {
+    const userRef = doc(db, `users/${user}/circles/${circle}`)
+    const circleRef = doc(db, `circles/${circle}/members/${user}`)
     try {
-        const docs = await getDocs(circlesCol)
+        await setDoc(userRef, {})
+        await setDoc(circleRef, {})
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function leaveCircle(user, circle) {
+    const userRef = doc(db, `users/${user}/circles/${circle}`)
+    const circleRef = doc(db, `circles/${circle}/members/${user}`)
+    try {
+        await deleteDoc(userRef)
+        await deleteDoc(circleRef)
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+async function getAllDocsFromCollection(collection, log) {
+    try {
+        console.log(log)
+        const docs = await getDocs(collection)
         const ids = []
         docs.forEach(doc => ids.push(doc.id))
         return ids
     } catch (err) {
-        console.log("Get Circle Error:", err)
+        console.warn("GET COLLECTION ERR:", err)
         throw err;
     }
 }

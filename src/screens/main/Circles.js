@@ -3,12 +3,11 @@ import {LinearGradient} from "expo-linear-gradient";
 import text from "../../js/text";
 import styles from "../../styles/modules/main/Circles.module.css";
 import root from "../../styles/Root.module.css";
-import pepper from "../../../assets/email-sent.png";
 
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading, nFormatter} from "../../js/util";
 import {useEffect, useState} from "react";
-import {getCircle} from "../../../server/user";
-import {useQueries} from "@tanstack/react-query";
+import {getCircle, getCircleMembers} from "../../../server/user";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import {useCircleStore} from "../../js/zustand";
 
 export default function ExploreCircleScreen(props) {
@@ -105,6 +104,13 @@ function Content(props) {
 }
 
 function Circle(props) {
+    const membersQuery = useQuery({
+        queryKey: ["members", props.circle.id],
+        queryFn: async () => await getCircleMembers(props.circle.id)
+    })
+
+    if (membersQuery.isLoading) return;
+
     return (
         <View style={styles.circle}>
             <Image source={{uri: URL.createObjectURL(props.circle.cover)}} style={styles.circleImage}/>
@@ -117,7 +123,7 @@ function Circle(props) {
             <TouchableOpacity style={styles.circleText} activeOpacity={0.8}
                               onPress={() => props.navigation.push("CircleInfo", props.circle)}>
                 <Text style={[text.h1, text.white, {textAlign: "center"}]}>{props.circle.title}</Text>
-                <Text style={[text.p, text.white]}>{nFormatter(props.circle.member_count, 1)} member{props.circle.member_count === 1 ? "":"s"}</Text>
+                <Text style={[text.p, text.white]}>{nFormatter(membersQuery.data.length, 1)} member{membersQuery.data.length === 1 ? "":"s"}</Text>
             </TouchableOpacity>
         </View>
     )

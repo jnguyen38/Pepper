@@ -34,6 +34,11 @@ module.exports = StyleSheet.create({
         fontFamily: 'Epilogue-Light',
         lineHeight: getFont(15)
     },
+    pRegular: {
+        fontSize: getFont(14),
+        fontFamily: 'Epilogue-Regular',
+        lineHeight: getFont(15)
+    },
     pItalics: {
         fontSize: getFont(14),
         fontFamily: 'Epilogue-LightItalic',
@@ -48,6 +53,14 @@ module.exports = StyleSheet.create({
         fontSize: getFont(13),
         fontFamily: 'Epilogue-ExtraLight',
     },
+    descRegular: {
+        fontSize: getFont(13),
+        fontFamily: 'Epilogue-Regular',
+    },
+    descMedium: {
+        fontSize: getFont(13),
+        fontFamily: 'Epilogue-Medium',
+    },
     descBold: {
         fontSize: getFont(13),
         fontFamily: 'Epilogue-SemiBold',
@@ -55,6 +68,10 @@ module.exports = StyleSheet.create({
     small: {
         fontSize: getFont(12),
         fontFamily: 'Epilogue-ExtraLight'
+    },
+    smallRegular: {
+        fontSize: getFont(12),
+        fontFamily: 'Epilogue-Regular'
     },
     smallBold: {
         fontSize: getFont(12),

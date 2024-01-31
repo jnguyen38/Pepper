@@ -28,6 +28,32 @@
     transform: translateY(-22px);
 }
 
+.join {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffffcc;
+    border-radius: 5px;
+    padding: 5px 8px;
+    transform: translateY(20px);
+    z-index: 10;
+}
+
+.joined {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #6464f6;
+    border-radius: 5px;
+    padding: 5px 8px;
+    transform: translateY(20px);
+    z-index: 10;
+}
+
 .socialInfo {
     width: 100%;
     border-bottom-width: 1px;

@@ -15,14 +15,6 @@ export async function addCircle(community, title, description, cover, logo, isPu
             attributes,
             creationTime: Timestamp.now(),
             managers: [user.uid],
-            member_count: 1,
-            members: [user.uid],
-            active_events_count: 0,
-            active_events: [],
-            past_events_count: 0,
-            past_events: [],
-            post_count: 0,
-            posts: []
         })
         await setCircleImage(cover, logo, circleRef.id)
         await joinCircle(user.uid, circleRef.id)
