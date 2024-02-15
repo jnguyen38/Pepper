@@ -13,3 +13,11 @@ export const useCircleStore = create((set) => ({
         return {circles}
     })
 }))
+
+
+export const useTabStore = create((set) => ({
+    tab: true,
+    setTab: (tab) => set(() => {
+        return {tab}
+    })
+}))

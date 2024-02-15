@@ -1,18 +1,5 @@
 import {updateProfile} from "firebase/auth";
-import {
-    addDoc,
-    arrayRemove,
-    collection,
-    deleteDoc,
-    doc,
-    getDoc,
-    getDocs,
-    increment,
-    onSnapshot,
-    setDoc,
-    updateDoc,
-    writeBatch
-} from "firebase/firestore"
+import {collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc, writeBatch} from "firebase/firestore"
 import {getCircleCover, getCircleLogo, setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
 import {parseDownloadURL} from "../src/js/util";
@@ -24,7 +11,7 @@ import {parseDownloadURL} from "../src/js/util";
  *
  * @param user UserCredential object
  * @param username Username of the user
- * @returns {Promise<void>} No return value
+ * @returns void
  */
 export async function createFirestoreUser(user, username) {
     try {
@@ -104,7 +91,7 @@ export function listenUserCircles(setState) {
 /***
  * TESTING FUNCTION: Resets the display name to render the initializeUser screen again
  *
- * @returns {Promise<void>} No return value
+ * @returns void
  */
 export async function resetDisplayName() {
     const user = auth.currentUser;
@@ -121,7 +108,7 @@ export async function resetDisplayName() {
  *
  * @param user1 uid of first user
  * @param user2 uid of second user
- * @returns {Promise<void>} No return value
+ * @returns void
  */
 export async function friend(user1, user2) {
     const user1Ref = doc(db, `users/${user1}/friends/${user2}`)
@@ -141,7 +128,7 @@ export async function friend(user1, user2) {
  *
  * @param user1 uid of first user
  * @param user2 uid of second user
- * @returns {Promise<void>} No return value
+ * @returns void
  */
 export async function unfriend(user1, user2) {
     const user1Ref = doc(db, `users/${user1}/friends/${user2}`)
@@ -162,7 +149,7 @@ export async function unfriend(user1, user2) {
  * @param displayName
  * @param phoneNumber
  * @param photoURL
- * @returns {Promise<void>}
+ * @returns void
  */
 export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
     const user = auth.currentUser;
@@ -261,9 +248,9 @@ export async function joinCircle(user, circle) {
     }
 }
 
-export async function leaveCircle(user, circle) {
-    const userRef = doc(db, `users/${user}/circles/${circle}`)
-    const circleRef = doc(db, `circles/${circle}/members/${user}`)
+export async function leaveCircle(userId, circleId) {
+    const userRef = doc(db, `users/${userId}/circles/${circleId}`)
+    const circleRef = doc(db, `circles/${circleId}/members/${userId}`)
     try {
         await deleteDoc(userRef)
         await deleteDoc(circleRef)
@@ -273,7 +260,17 @@ export async function leaveCircle(user, circle) {
     }
 }
 
-async function getAllDocsFromCollection(collection, log) {
+export async function logUserPost(userId, postId) {
+    const postDoc = doc(db, `users/${userId}/posts/${postId}`)
+    try {
+        await setDoc(postDoc, {})
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function getAllDocsFromCollection(collection, log) {
     try {
         console.log(log)
         const docs = await getDocs(collection)

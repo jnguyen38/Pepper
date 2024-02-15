@@ -77,6 +77,14 @@ module.exports = StyleSheet.create({
         fontSize: getFont(12),
         fontFamily: 'Epilogue-Medium'
     },
+    smallBoldItalics: {
+        fontSize: getFont(12),
+        fontFamily: 'Epilogue-MediumItalic'
+    },
+    smallItalics: {
+        fontSize: getFont(12),
+        fontFamily: 'Epilogue-LightItalic'
+    },
     fine: {
         fontSize: getFont(10),
         fontFamily: 'Epilogue-ExtraLight'
