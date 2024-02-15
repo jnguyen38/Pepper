@@ -1,23 +1,18 @@
 import {updateProfile} from "firebase/auth";
-import {
-    addDoc,
-    arrayRemove,
-    arrayUnion,
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    increment,
-    updateDoc,
-    writeBatch,
-    onSnapshot
-} from "firebase/firestore"
+import {collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc, writeBatch} from "firebase/firestore"
 import {getCircleCover, getCircleLogo, setProfilePicture} from "./storage";
 import {auth, db} from "./config/config";
-import {useQuery} from "@tanstack/react-query";
 import {parseDownloadURL} from "../src/js/util";
 
-
+/**
+ * Function that is called at user registration time to
+ * (1) create a new user in the firestore users collection and
+ * (2) register a new document with the taken username, mapping to the email and uid of the username
+ *
+ * @param user UserCredential object
+ * @param username Username of the user
+ * @returns void
+ */
 export async function createFirestoreUser(user, username) {
     try {
         const usersRef = doc(db, "users", user.uid)
@@ -32,10 +27,6 @@ export async function createFirestoreUser(user, username) {
             email: user.email,
             photoURL: user.photoURL,
             username: username,
-            friend_count: 0,
-            friends: [],
-            circle_count: 0,
-            circles: []
         });
 
         batch.set(takenRef, {
@@ -50,6 +41,12 @@ export async function createFirestoreUser(user, username) {
     }
 }
 
+/***
+ * Function that is called at app initiation, after user is authenticated.
+ *
+ * @param uid UID of the current authenticated user
+ * @returns {Promise<DocumentData>} User document in the users collection
+ */
 export async function getUser(uid) {
     try {
         const docRef = doc(db, "users", uid)
@@ -61,24 +58,12 @@ export async function getUser(uid) {
     }
 }
 
-export async function getUserFriends(uid) {
-    try {
-        const colRef = collection(db, "users", uid, "friends")
-        const unsubscribe = onSnapshot(colRef, snapshot => {
-            let ids = []
-            snapshot.forEach(doc => {
-                console.log("Friend doc", doc.id)
-                ids.push(doc.id)
-            })
-            return ids
-        })
-        return unsubscribe
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
+/***
+ * Function that initializes a snapshot listener of the current user's friends collection
+ *
+ * @param setState Callback function of state to set
+ * @returns {Unsubscribe} Unsubscriber called at dismount
+ */
 export function listenUserFriends(setState) {
     const colRef = collection(db, "users", auth.currentUser.uid, "friends")
     return onSnapshot(colRef, snapshot => {
@@ -88,6 +73,12 @@ export function listenUserFriends(setState) {
     })
 }
 
+/***
+ * Function that initializes a snapshot listener of the current user's friends collection
+ *
+ * @param setState Callback function of state to set
+ * @returns {Unsubscribe} Unsubscriber called at dismount
+ */
 export function listenUserCircles(setState) {
     const colRef = collection(db, "users", auth.currentUser.uid, "circles")
     return onSnapshot(colRef, snapshot => {
@@ -97,18 +88,11 @@ export function listenUserCircles(setState) {
     })
 }
 
-export async function getUserCircles(uid) {
-    try {
-        const docRef = doc(db, "users", uid, "circles")
-        const docSnap = await getDocs(docRef)
-        return docSnap.data()
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
-
+/***
+ * TESTING FUNCTION: Resets the display name to render the initializeUser screen again
+ *
+ * @returns void
+ */
 export async function resetDisplayName() {
     const user = auth.currentUser;
     try {
@@ -119,68 +103,54 @@ export async function resetDisplayName() {
     }
 }
 
+/***
+ * Function that adds each user's id as a document to the other's friend collection. Order of inputs is irrelevant
+ *
+ * @param user1 uid of first user
+ * @param user2 uid of second user
+ * @returns void
+ */
 export async function friend(user1, user2) {
-    const user1Ref = doc(db, `users/${user1}`)
-    const user2Ref = doc(db, `users/${user2}`)
+    const user1Ref = doc(db, `users/${user1}/friends/${user2}`)
+    const user2Ref = doc(db, `users/${user2}/friends/${user1}`)
     try {
-        await updateDoc(user1Ref, {
-            friend_count: increment(1),
-            friends: arrayUnion(user2)
-        })
-        await updateDoc(user2Ref, {
-            friend_count: increment(1),
-            friends: arrayUnion(user1)
-        })
+        await setDoc(user1Ref, {})
+        await setDoc(user2Ref, {})
     } catch (err) {
         console.warn(err.message);
         throw err;
     }
 }
 
+/***
+ * Function that removes each user's id as a document to the other's friend collection. Order of inputs is irrelevant.
+ * Assumes that the two users entered are friends
+ *
+ * @param user1 uid of first user
+ * @param user2 uid of second user
+ * @returns void
+ */
 export async function unfriend(user1, user2) {
-    const user1Ref = doc(db, `users/${user1}`)
-    const user2Ref = doc(db, `users/${user2}`)
+    const user1Ref = doc(db, `users/${user1}/friends/${user2}`)
+    const user2Ref = doc(db, `users/${user2}/friends/${user1}`)
     try {
-        await updateDoc(user1Ref, {
-            friend_count: increment(-1),
-            friends: arrayRemove(user2)
-        })
-        await updateDoc(user2Ref, {
-            friend_count: increment(-1),
-            friends: arrayRemove(user1)
-        })
+        await deleteDoc(user1Ref)
+        await deleteDoc(user2Ref)
     } catch (err) {
         console.warn(err.message);
         throw err;
     }
 }
 
-export async function joinCircle(user, circle) {
-    const userRef = doc(db, `users/${user}/circles`)
-    try {
-        await addDoc(circle, {})
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
-export async function leaveCircle(user, circle) {
-    const userRef = doc(db, `users/${user}`)
-    try {
-        await updateDoc(userRef, {
-            circle_count: increment(-1),
-            circles: arrayRemove(circle)
-        })
-    } catch (err) {
-        console.warn(err.message);
-        throw err;
-    }
-}
-
-
-// Initializes Auth/Firestore User Display Name, Auth/Firestore photoURL,
-// and Firestore phoneNumber (Auth phoneNumber is not supported on web API Jan2024)
+/***
+ * Initializes Auth/Firestore User Display Name, Auth/Firestore photoURL,
+ * and Firestore phoneNumber (Auth phoneNumber is not supported on web API as of Jan 2024)
+ *
+ * @param displayName
+ * @param phoneNumber
+ * @param photoURL
+ * @returns void
+ */
 export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
     const user = auth.currentUser;
     const userRef = doc(db, "users", user.uid)
@@ -210,25 +180,38 @@ export async function initializeUserInfo(displayName, phoneNumber, photoURL) {
     }
 }
 
-export async function getCircle(circle) {
-    const circleRef = doc(db, `circles/${circle}`)
-    console.log("GET CIRCLE", circle)
+/***
+ * Retrieve circle data given circleId. Called with "circle" query on explore/circle pages
+ *
+ * @param circleId
+ * @returns {Promise<DocumentData>}
+ */
+export async function getCircle(circleId) {
+    const circleRef = doc(db, `circles/${circleId}`)
+    console.log("GET CIRCLE", circleId)
 
     try {
         let res = await getDoc(circleRef)
         res = res.data()
-        res.cover = await getCircleCover(circle)
-        res.logo = await getCircleLogo(circle)
+        res.cover = await getCircleCover(circleId)
+        res.logo = await getCircleLogo(circleId)
+        res.id = circleId;
         return res
     } catch(err) {
-        console.log("Get Circle Error:", err)
+        console.warn("Get Circle Error:", err)
         throw err;
     }
 }
 
-export async function getMember(member) {
-    const userRef = doc(db, `users/${member}`)
-    console.log("GET USER", member)
+export async function getCircleMembers(circleId) {
+    const membersCol = collection(db, `circles/${circleId}/members`)
+    const log = `GET CIRCLE MEMBERS ${circleId}`
+    return await getAllDocsFromCollection(membersCol, log)
+}
+
+export async function getMember(userId) {
+    const userRef = doc(db, `users/${userId}`)
+    console.log("GET USER", userId)
 
     try {
         let res = await getDoc(userRef)
@@ -236,7 +219,66 @@ export async function getMember(member) {
         res.photo = await parseDownloadURL(res.photoURL)
         return res
     } catch(err) {
-        console.log("Get Circle Error:", err)
+        console.warn("Get Circle Error:", err)
+        throw err;
+    }
+}
+
+export async function getUserFriends(userId) {
+    const friendsCol = collection(db, `users/${userId}/friends`)
+    const log = `GET USER FRIENDS ${userId}`
+    return await getAllDocsFromCollection(friendsCol, log)
+}
+
+export async function getUserCircles(userId) {
+    const circlesCol = collection(db, `users/${userId}/circles`)
+    const log = `GET USER CIRCLES ${userId}`
+    return await getAllDocsFromCollection(circlesCol, log);
+}
+
+export async function joinCircle(user, circle) {
+    const userRef = doc(db, `users/${user}/circles/${circle}`)
+    const circleRef = doc(db, `circles/${circle}/members/${user}`)
+    try {
+        await setDoc(userRef, {})
+        await setDoc(circleRef, {})
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function leaveCircle(userId, circleId) {
+    const userRef = doc(db, `users/${userId}/circles/${circleId}`)
+    const circleRef = doc(db, `circles/${circleId}/members/${userId}`)
+    try {
+        await deleteDoc(userRef)
+        await deleteDoc(circleRef)
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function logUserPost(userId, postId) {
+    const postDoc = doc(db, `users/${userId}/posts/${postId}`)
+    try {
+        await setDoc(postDoc, {})
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
+    }
+}
+
+export async function getAllDocsFromCollection(collection, log) {
+    try {
+        console.log(log)
+        const docs = await getDocs(collection)
+        const ids = []
+        docs.forEach(doc => ids.push(doc.id))
+        return ids
+    } catch (err) {
+        console.warn("GET COLLECTION ERR:", err)
         throw err;
     }
 }

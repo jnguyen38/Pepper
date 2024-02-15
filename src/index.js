@@ -17,6 +17,8 @@ import InitializeUser from "./screens/InitializeUser";
 import {Loading} from "./js/util";
 import {getUser, listenUserCircles, listenUserFriends} from "../server/user";
 import {useQuery} from "@tanstack/react-query";
+import {useCircleStore, useFriendStore} from "./js/zustand";
+import {GestureHandlerRootView} from "react-native-gesture-handler";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -56,6 +58,8 @@ export default function Index() {
     }
 
     useEffect(() => {
+        console.log(auth)
+        console.log(authUser)
         return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
 
@@ -75,9 +79,14 @@ export default function Index() {
 }
 
 function Unauthenticated() {
+    useEffect(() => {
+        console.log("Unauthed")
+    }, [])
+
     return (
         <NavigationContainer>
             <StatusBar barStyle={"light-content"}/>
+
             <LoginStack.Navigator screenOptions={{headerShown: false}}>
                 <LoginStack.Screen name={"Login"} component={LoginScreen} options={{animation: "none"}}/>
                 <LoginStack.Screen name={"ForgotPassword"} component={ForgotPasswordScreen}/>
@@ -92,8 +101,10 @@ function Authenticated(props) {
     const [tab, setTab] = useState(0);
     const [location, setLocation] = useState(null);
     const [user, setUser] = useState(undefined);
-    const [friends, setFriends] = useState(undefined);
-    const [circles, setCircles] = useState(undefined);
+    const friends = useFriendStore(state => state.friends)
+    const setFriends = useFriendStore(state => state.setFriends)
+    const circles = useCircleStore(state => state.circles)
+    const setCircles = useCircleStore(state => state.setCircles)
     const tabs = ["HomeTab", "SearchTab", "AddTab", "CirclesTab", "ProfileTab"];
 
     const userQuery = useQuery({
@@ -118,8 +129,6 @@ function Authenticated(props) {
         setLocation(loc)
     }
 
-
-
     useEffect(() => {
         getLocation().then();
 
@@ -136,27 +145,30 @@ function Authenticated(props) {
         return <Loading/>
 
     return (
-        <NavigationContainer>
-            <View style={{height: "100%", width: "100%"}}>
-                <Tab.Navigator style={{height: "100%", width: "100%"}}
-                               tabBar={props => (
-                                   <NavBar tab={tab} setTab={setTab} tabs={tabs} {...props}/>
-                               )}
-                               screenOptions={{headerShown: false}}>
-                    <Tab.Screen name={tabs[0]}
-                                component={HomeTab}
-                                initialParams={{location: location, user: userQuery.data}}/>
-                    <Tab.Screen name={tabs[1]}
-                                component={SearchTab} initialParams={{user: userQuery.data}}/>
-                    <Tab.Screen name={tabs[2]}>
-                        {props => <AddTab user={user} forceUpadateUser={forceUpdateUser}/>}
-                    </Tab.Screen>
-                    <Tab.Screen name={tabs[3]}
-                                component={CirclesTab} initialParams={{user: userQuery.data}}/>
-                    <Tab.Screen name={tabs[4]}
-                                component={ProfileTab} initialParams={{user: userQuery.data, friends, circles}}/>
-                </Tab.Navigator>
-            </View>
-        </NavigationContainer>
+        <GestureHandlerRootView>
+            <NavigationContainer>
+                <View style={{height: "100%", width: "100%"}}>
+                    <Tab.Navigator style={{height: "100%", width: "100%"}}
+                                   tabBar={props => (
+                                       <NavBar tab={tab} setTab={setTab} tabs={tabs} {...props}/>
+                                   )}
+                                   screenOptions={{headerShown: false}}>
+                        <Tab.Screen name={tabs[0]}
+                                    component={HomeTab}
+                                    initialParams={{location: location, user: userQuery.data}}/>
+                        <Tab.Screen name={tabs[1]}
+                                    component={SearchTab} initialParams={{user: userQuery.data}}/>
+                        <Tab.Screen name={tabs[2]}>
+                            {props => <AddTab user={user} forceUpadateUser={forceUpdateUser}/>}
+                        </Tab.Screen>
+                        <Tab.Screen name={tabs[3]}
+                                    component={CirclesTab} initialParams={{user: userQuery.data}}/>
+                        <Tab.Screen name={tabs[4]}
+                                    component={ProfileTab} initialParams={{user: userQuery.data}}/>
+                    </Tab.Navigator>
+                </View>
+            </NavigationContainer>
+        </GestureHandlerRootView>
+
     )
 }

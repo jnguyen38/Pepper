@@ -42,6 +42,10 @@ export default function LoginScreen(props) {
         setEmailError(false)
     }, [email])
 
+    useEffect(() => {
+        console.log("Login")
+    }, [])
+
     async function handleLogin() {
         setLoading(true)
         login(email, password).then(async () => {

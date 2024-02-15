@@ -11,10 +11,13 @@ import groupPurple from "../../assets/navbar/group-purple.png";
 import addPurple from "../../assets/navbar/add-purple.png";
 import searchPurple from "../../assets/navbar/search-purple.png";
 import profilePurple from "../../assets/navbar/profile-purple.png";
+import {useTabStore} from "./zustand";
 
 const OPACITY = 0.5;
 
 export default function NavBar(props) {
+    const tab = useTabStore(s => s.tab)
+
     function updateTab(nextTab) {
         if (nextTab !== props.tab) {
             props.navigation.navigate(props.tabs[nextTab])
@@ -24,6 +27,8 @@ export default function NavBar(props) {
 
         props.setTab(nextTab)
     }
+
+    if (!tab) return;
 
     return (
         <View style={styles.navbar}>

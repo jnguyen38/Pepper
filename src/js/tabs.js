@@ -70,13 +70,11 @@ export function CirclesTab(props) {
 export function ProfileTab(props) {
     const {Navigator, Screen} = createNativeStackNavigator();
     const user = props.route.params.user;
-    const circles = props.route.params.circles;
-    const friends = props.route.params.friends;
 
     return (
         <Navigator style={{width: "100%", height: "100%"}}
                    screenOptions={{headerShown: false}}>
-            <Screen name={"Home"} component={ProfileScreen} initialParams={{user, friends, circles}}/>
+            <Screen name={"Home"} component={ProfileScreen} initialParams={{user}}/>
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
             <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>

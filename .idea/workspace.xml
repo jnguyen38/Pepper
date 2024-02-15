@@ -5,17 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19d97c30-dd75-47cf-bde4-5eee39dfed2d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/assets/add-circle-white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/post.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/add.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/add.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/tabs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/Members.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Members.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/main/Add.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Add.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/main/Circles.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Circles.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/main/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/Members.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/Members.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/navbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/text.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/zustand.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/zustand.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/CircleInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/CircleInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/ProfilePreview.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/ProfilePreview.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/CircleInfo.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/CircleInfo.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/Navbar.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/Navbar.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Circles.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Circles.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,13 +53,14 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "zustand",
     "last_opened_file_path": "/Users/jnguyen/projects/pepper",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "yarn",
+    "ruby.rails.projectView.checked": "true",
     "ts.external.directory.path": "/Users/jnguyen/projects/pepper/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
@@ -70,7 +76,9 @@
       <workItem from="1704399345076" duration="64492000" />
       <workItem from="1704897868823" duration="10239000" />
       <workItem from="1705010049365" duration="221000" />
-      <workItem from="1705540466088" duration="58188000" />
+      <workItem from="1705540466088" duration="83776000" />
+      <workItem from="1707441131342" duration="9298000" />
+      <workItem from="1707841190520" duration="598000" />
     </task>
     <servers />
   </component>

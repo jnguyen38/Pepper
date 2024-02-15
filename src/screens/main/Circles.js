@@ -3,15 +3,15 @@ import {LinearGradient} from "expo-linear-gradient";
 import text from "../../js/text";
 import styles from "../../styles/modules/main/Circles.module.css";
 import root from "../../styles/Root.module.css";
-import pepper from "../../../assets/email-sent.png";
 
 import {BackButton, CustomSafeAreaView, FocusAwareStatusBar, Loading, nFormatter} from "../../js/util";
 import {useEffect, useState} from "react";
-import {getCircle} from "../../../server/user";
-import {useQueries} from "@tanstack/react-query";
+import {getCircle, getCircleMembers} from "../../../server/user";
+import {useQueries, useQuery} from "@tanstack/react-query";
+import {useCircleStore} from "../../js/zustand";
 
 export default function ExploreCircleScreen(props) {
-    if (!props.route.params.user) return;
+    const circles = useCircleStore(s => s.circles)
 
     return (
         <View style={root.statusBar}>
@@ -31,7 +31,7 @@ export default function ExploreCircleScreen(props) {
                         <Text style={[text.p, text.white]}>See what your friends are up to</Text>
                     </View>
 
-                    <Content {...props} circles={props.route.params.user.circles}/>
+                    <Content {...props} circles={circles}/>
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -39,7 +39,7 @@ export default function ExploreCircleScreen(props) {
 }
 
 export function CircleScreen(props) {
-    if (!props.route.params.circles) return;
+    const circles = props.route.params.circles;
 
     return (
         <View style={root.statusBar}>
@@ -54,7 +54,7 @@ export function CircleScreen(props) {
                 <ScrollView contentContainerStyle={styles.scrollViewContainer}
                             showsVerticalScrollIndicator={false}
                             decelerationRate={"fast"}>
-                    <Content {...props} circles={props.route.params.circles}/>
+                    <Content {...props} circles={circles}/>
                 </ScrollView>
             </CustomSafeAreaView>
         </View>
@@ -104,6 +104,13 @@ function Content(props) {
 }
 
 function Circle(props) {
+    const membersQuery = useQuery({
+        queryKey: ["members", props.circle.id],
+        queryFn: async () => await getCircleMembers(props.circle.id)
+    })
+
+    if (membersQuery.isLoading) return;
+
     return (
         <View style={styles.circle}>
             <Image source={{uri: URL.createObjectURL(props.circle.cover)}} style={styles.circleImage}/>
@@ -116,7 +123,7 @@ function Circle(props) {
             <TouchableOpacity style={styles.circleText} activeOpacity={0.8}
                               onPress={() => props.navigation.push("CircleInfo", props.circle)}>
                 <Text style={[text.h1, text.white, {textAlign: "center"}]}>{props.circle.title}</Text>
-                <Text style={[text.p, text.white]}>{nFormatter(props.circle.member_count, 1)} member{props.circle.member_count === 1 ? "":"s"}</Text>
+                <Text style={[text.p, text.white]}>{nFormatter(membersQuery.data.length, 1)} member{membersQuery.data.length === 1 ? "":"s"}</Text>
             </TouchableOpacity>
         </View>
     )
