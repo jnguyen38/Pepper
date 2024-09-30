@@ -9,7 +9,7 @@ import MembersScreen from "../screens/Members";
 import EventsList from "../screens/Events";
 import NewCircle from "../screens/NewCircle";
 import ProfilePreview from "../screens/ProfilePreview";
-import {useEffect} from "react";
+import Post from "../screens/Post";
 
 export function HomeTab({route}) {
     const {Navigator, Screen} = createNativeStackNavigator();
@@ -60,9 +60,10 @@ export function CirclesTab(props) {
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
             <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
-            <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
+            <Screen name={"OtherProfile"} component={OtherProfileScreen}/>
             <Screen name={"EventsList"} component={EventsList}/>
             <Screen name={"ProfilePreview"} component={ProfilePreview} options={{animation: "fade", animationDuration: 500}}/>
+            <Screen name={"Post"} component={Post}/>
         </Navigator>
     )
 }
@@ -78,9 +79,10 @@ export function ProfileTab(props) {
             <Screen name={"Circles"} component={CircleScreen}/>
             <Screen name={"CircleInfo"} component={CircleInfoScreen}/>
             <Screen name={"MembersList"} component={MembersScreen} initialParams={{user}}/>
-            <Screen name={"OtherProfile"} component={OtherProfileScreen} initialParams={{user}}/>
+            <Screen name={"OtherProfile"} component={OtherProfileScreen}/>
             <Screen name={"EventsList"} component={EventsList}/>
             <Screen name={"ProfilePreview"} component={ProfilePreview} options={{animation: "fade", animationDuration: 500}}/>
+            <Screen name={"Post"} component={Post}/>
         </Navigator>
     )
 }

@@ -1,31 +1,32 @@
 import root from "../../styles/Root.module.css";
 import styles from "../../styles/modules/main/Home.module.css"
 import text from "../../js/text";
-import {Text, TouchableOpacity, View} from "react-native";
-import {LinearGradient} from "expo-linear-gradient";
+import {
+    Dimensions,
+    Keyboard, ScrollView, StyleSheet,
+    Text,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from "react-native";
 import MapView from "react-native-maps";
-import {CustomSafeAreaView, FocusAwareStatusBar, Loading} from "../../js/util";
+import {Loading} from "../../js/util";
+import {useEffect} from "react";
+import Animated, {useAnimatedStyle, useSharedValue, withSpring} from "react-native-reanimated";
+import {Gesture, GestureDetector} from "react-native-gesture-handler";
+
+const IMG_HEIGHT = 275;
+const SCREEN_HEIGHT = Dimensions.get('window').height
 
 export default function HomeScreen(props) {
     return (
         <View style={root.statusBar}>
-            <FocusAwareStatusBar barStyle={"dark-content"} hidden={false} animated={true}/>
-
-            <CustomSafeAreaView>
-                <View style={styles.homeContainer}>
-                    <TouchableOpacity style={styles.upcoming} activeOpacity={0.8}
-                                      onPress={() => props.navigation.push("EventsList")}>
-                        <LinearGradient colors={['#3971f6', '#9028cc']}
-                                        start={{x: 1, y: 1}}
-                                        end={{x: 0, y: 0}}
-                                        style={[root.linearBackground, root.rounded10]}/>
-
-                        <Text style={[text.h1, text.white]}>Your events</Text>
-                        <Text style={[text.p, text.white]}>See what's coming up next</Text>
-                    </TouchableOpacity>
+            <View style={styles.homeContainer}>
+                <TouchableOpacity style={styles.mapContainer} activeOpacity={.92}>
                     <Map {...props}/>
-                </View>
-            </CustomSafeAreaView>
+                </TouchableOpacity>
+                <EventsListPullOut/>
+            </View>
         </View>
     )
 }
@@ -64,5 +65,107 @@ function Map(props) {
             </View>
         </MapView>
     )
-
 }
+
+function EventsListPullOut(props) {
+    const translateY = useSharedValue(0)
+    const context = useSharedValue({y: 0})
+    const snapPoints =  [-115, -350, -SCREEN_HEIGHT + 50]
+    const springOptions =  {
+        damping: 15,
+        mass: 1
+    }
+
+    const pan = Gesture.Pan()
+        .onStart(() => {
+            context.value = {y: translateY.value};
+        })
+        .onUpdate(event =>  {
+            translateY.value = event.translationY + context.value.y
+            translateY.value = Math.max(translateY.value, snapPoints[snapPoints.length-1])
+            translateY.value = Math.min(translateY.value, snapPoints[0])
+        })
+        .onEnd(event => {
+            // Swiping Up, check which snap point it is closest to
+            if (event.velocityY < -1000) {
+                if (translateY.value > snapPoints[1]) {
+                    translateY.value = withSpring(snapPoints[1], springOptions);
+                } else {
+                    translateY.value = withSpring(snapPoints[2], springOptions);
+                }
+            }
+            // Swiping Down, check which snap point it is closest to
+            else if (event.velocityY > 1000) {
+                if (translateY.value > snapPoints[1]) {
+                    translateY.value = withSpring(snapPoints[0], springOptions);
+                } else {
+                    translateY.value = withSpring(snapPoints[1], springOptions);
+                }
+            }
+            // Check if the modal is pulled to a specific snap point
+            else if (translateY.value > (snapPoints[1] + snapPoints[0])/2) {
+                translateY.value = withSpring(snapPoints[0], springOptions);
+            } else if (translateY.value > (snapPoints[2] + snapPoints[1])/2) {
+                translateY.value = withSpring(snapPoints[1], springOptions);
+            } else {
+                translateY.value = withSpring(snapPoints[2], springOptions);
+            }
+        })
+
+    const style = useAnimatedStyle(() => {
+        return {
+            transform: [{translateY: translateY.value}]
+        }
+    })
+
+    useEffect(() => {
+        translateY.value = withSpring(snapPoints[0], springOptions)
+    }, [])
+
+    function handleTap() {
+        if (Keyboard.isVisible()) Keyboard.dismiss()
+        if (translateY.value === snapPoints[0]) translateY.value = withSpring(snapPoints[1], springOptions);
+        if (translateY.value === snapPoints[1]) translateY.value = withSpring(snapPoints[2], springOptions);
+    }
+
+    return (
+        <GestureDetector gesture={pan}>
+            <TouchableWithoutFeedback onPress={handleTap}>
+                <Animated.View style={[styleSheet.addPostContainer, style, styles.tongueShadow]}>
+                    <View style={styles.handle}/>
+                    <ScrollView style={styles.tongueContainer}
+                                pointerEvents={"none"}>
+
+                    </ScrollView>
+                </Animated.View>
+            </TouchableWithoutFeedback>
+        </GestureDetector>
+    )
+}
+
+
+const styleSheet = StyleSheet.create({
+    imageHolder: {
+        width: "100%",
+        height: IMG_HEIGHT,
+        position: "relative",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 5
+    },
+    addPostContainer: {
+        width: "100%",
+        minHeight: SCREEN_HEIGHT,
+        position: "absolute",
+        top: SCREEN_HEIGHT,
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        zIndex: 10,
+        backgroundColor: "#FFFFFF",
+        padding: 12,
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center"
+    }
+})

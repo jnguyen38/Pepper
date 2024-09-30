@@ -1,7 +1,6 @@
 .homeContainer {
     width: 100%;
     height: 100%;
-    padding-top: 20px;
     padding-bottom: 20px;
     display: flex;
     align-items: center;
@@ -21,11 +20,19 @@
     gap: 5px;
 }
 
-.map {
-    width: 90%;
-    height: 50%;
-    border-radius: 10px;
+.mapContainer {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
     position: relative;
+}
+
+.map {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+
+    position: absolute;
 }
 
 .mapOverlay {
@@ -38,4 +45,21 @@
     justify-content: center;
     align-items: center;
     background-color: #ffffffcc;
+}
+
+.handle {
+    width: 60px;
+    height: 3px;
+    background-color: #BBBBBB;
+    border-radius: 5px;
+}
+
+.tongueShadow {
+    box-shadow: 0 0 5px #BBBBBB;
+}
+
+.tongueContainer {
+    width: 100%;
+    height: 100%;
+    background-color: #6464f6;
 }

@@ -33,23 +33,23 @@ export async function setProfilePicture(uri, uid) {
         // Hacky workaround for RN/iOS file compression
         // TLDR; iOS caches full image size when RN tries to compress using image-picker
         //       so this redirects the file to upload to the cached RN version instead
-        let arr = uri.toString().split("/")
-        let fileName = arr[arr.length - 1]
-        console.log(fileName)
+        let fileName = uri.toString().split("/").pop();
+        console.log("fileName:", fileName)
+
         if (Platform.OS === 'ios') {
             const originalUri = uri;
             uri = `${FileSystem.documentDirectory}resumableUploadManager-${fileName}.toupload`;
             await FileSystem.copyAsync({ from: originalUri, to: uri });
         }
 
-        let blob = new Blob([await (await fetch(uri)).blob()], { type: 'image/jpeg' });
-
+        let fetchResponse = await fetch(uri)
+        let blob = await fetchResponse.blob()
         const snapshot = await uploadBytes(storageRef, blob);
         console.log('Uploaded a blob or file!');
-        console.log("Snapshot", snapshot);
+        console.log("snapshot", snapshot);
 
         const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log("Download URL:", downloadURL);
+        console.log("downloadURL:", downloadURL);
 
         return downloadURL;
     } catch(err) {

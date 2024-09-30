@@ -1,16 +1,13 @@
-import {ActivityIndicator, Image, PixelRatio, SafeAreaView, StatusBar, TouchableOpacity, View} from "react-native";
+import {Image, SafeAreaView, StatusBar, TouchableOpacity, View, Text} from "react-native";
 import styles from "../styles/modules/CircleInfo.module.css";
 import backArrow from "../../assets/back-arrow.png";
 import backArrowPurple from "../../assets/back-arrow-purple.png";
 import {useIsFocused} from "@react-navigation/native";
 import React from "react";
+import {MaterialIndicator} from "react-native-indicators";
+import text from "../js/text";
 
 export const PROFILE_QUALITY = 0.1;
-
-export function getFont(size) {
-    const fontScale = PixelRatio.getFontScale()
-    return size/fontScale;
-}
 
 export function nFormatter(num, digits) {
     const lookup = [
@@ -64,10 +61,30 @@ export function FocusAwareStatusBar(props) {
     return isFocused ? <StatusBar {...props} /> : null;
 }
 
-export function Loading() {
+export function Loading(props) {
+    let size;
+    if (props.size === "large") {
+        size = 45
+    } else if (props.size === "medium") {
+        size = 30
+    } else if (props.size === "small") {
+        size = 20
+    } else if (props.size === "xsmall") {
+        size = 12
+    } else {
+        size = props.size ? props.size : 30;
+    }
+
     return (
         <View style={{width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <ActivityIndicator size={"large"} color={"#6464f6"}/>
+            <View style={{position: "relative", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <View style={{position: "absolute"}}>
+                    <MaterialIndicator size={size + 10} trackWidth={2} color={"#6464f6"}/>
+                </View>
+                <View style={{position: "absolute"}}>
+                    <MaterialIndicator size={size} trackWidth={1} color={"#6464f6"}/>
+                </View>
+            </View>
         </View>
     )
 }
@@ -75,4 +92,10 @@ export function Loading() {
 export async function parseDownloadURL(downloadURL) {
     console.log("GET DownloadURL")
     return await (await fetch(downloadURL)).blob()
+}
+
+export function ParagraphText (props) {
+    return (
+        <Text style={[text.p, text.black, {...props.styles}]}>{props.children}</Text>
+    )
 }

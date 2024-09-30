@@ -19,6 +19,7 @@ import {initializeUserInfo} from "../../server/user";
 import * as ImagePicker from "expo-image-picker";
 import add from "../../assets/add-white.png"
 import {PROFILE_QUALITY} from "../js/util";
+import {logoutFirebase} from "../../server/auth";
 
 export default function InitializeUser(props) {
     const [name, setName] = useState("")

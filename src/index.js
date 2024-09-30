@@ -19,6 +19,7 @@ import {getUser, listenUserCircles, listenUserFriends} from "../server/user";
 import {useQuery} from "@tanstack/react-query";
 import {useCircleStore, useFriendStore} from "./js/zustand";
 import {GestureHandlerRootView} from "react-native-gesture-handler";
+import {BallIndicator, BarIndicator} from "react-native-indicators";
 
 const LoginStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator()
@@ -43,7 +44,6 @@ export default function Index() {
 
     function forceUpdateAuthUser() {
         const user = auth.currentUser;
-
         user.reload().then(() => {
             const refreshUser = auth.currentUser;
             setAuthUser(refreshUser)
@@ -58,13 +58,11 @@ export default function Index() {
     }
 
     useEffect(() => {
-        console.log(auth)
-        console.log(authUser)
         return onAuthStateChanged(auth, onAuthStateChangedHandler);
     }, [])
 
     if (initializing)
-        return <Loading/>
+        return <Loading size={"large"}/>
 
     if (!authUser)
         return <Unauthenticated/>
@@ -79,14 +77,9 @@ export default function Index() {
 }
 
 function Unauthenticated() {
-    useEffect(() => {
-        console.log("Unauthed")
-    }, [])
-
     return (
         <NavigationContainer>
             <StatusBar barStyle={"light-content"}/>
-
             <LoginStack.Navigator screenOptions={{headerShown: false}}>
                 <LoginStack.Screen name={"Login"} component={LoginScreen} options={{animation: "none"}}/>
                 <LoginStack.Screen name={"ForgotPassword"} component={ForgotPasswordScreen}/>
@@ -130,7 +123,8 @@ function Authenticated(props) {
     }
 
     useEffect(() => {
-        getLocation().then();
+        console.log("Fetching location...")
+        getLocation().then(() => console.log("Received location"));
 
         const unsubscribeFriends = listenUserFriends(setFriends)
         const unsubscribeCircles = listenUserCircles(setCircles)
@@ -141,8 +135,8 @@ function Authenticated(props) {
         }
     }, [])
 
-    if (userQuery.isLoading || userQuery.isFetching || !friends || !circles)
-        return <Loading/>
+    if (userQuery.isLoading || userQuery.isFetching || !friends || !circles || !location)
+        return <Loading size={"large"}/>
 
     return (
         <GestureHandlerRootView>

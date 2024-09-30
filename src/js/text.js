@@ -1,5 +1,9 @@
-import { StyleSheet } from 'react-native';
-import {getFont} from "./util";
+import {PixelRatio, StyleSheet} from 'react-native';
+
+function getFont(size) {
+    const fontScale = PixelRatio.getFontScale()
+    return size/fontScale;
+}
 
 module.exports = StyleSheet.create({
     white: {color: "white"},

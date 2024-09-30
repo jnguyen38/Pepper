@@ -263,6 +263,7 @@ export async function leaveCircle(userId, circleId) {
 export async function logUserPost(userId, postId) {
     const postDoc = doc(db, `users/${userId}/posts/${postId}`)
     try {
+        console.log("setting doc")
         await setDoc(postDoc, {})
     } catch (err) {
         console.warn(err.message);

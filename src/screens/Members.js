@@ -98,7 +98,7 @@ function Member(props) {
         <View style={styles.member}>
             <TouchableOpacity style={styles.toProfile}
                               activeOpacity={0.8}
-                              onPress={() => props.navigation.push("OtherProfile", props.member)}>
+                              onPress={() => props.navigation.push("OtherProfile", {user: props.member})}>
                 <Image source={{uri: URL.createObjectURL(props.member.photo)}} style={styles.profilePic}/>
                 <View style={styles.textHolder}>
                     <Text style={[text.h4, text.pepper]}>{props.member.displayName}</Text>

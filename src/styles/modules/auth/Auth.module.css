@@ -106,7 +106,6 @@
 
 .provider {
     width: 45%;
-    aspect-ratio: auto;
     object-fit: contain;
 }
 

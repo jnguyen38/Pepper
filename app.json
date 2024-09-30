@@ -16,7 +16,7 @@
       ]
     },
     "splash": {
-      "image": "./assets/brand/pepper-purple-app-icon.png",
+      "image": "./assets/brand/Pepper-Big-Logo-Purple.png",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
@@ -55,7 +55,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "eas": {

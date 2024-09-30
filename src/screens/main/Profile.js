@@ -1,9 +1,10 @@
-import {Image, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
+import {Image, RefreshControl, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View} from "react-native";
 import {
     BackButton,
     CustomSafeAreaView,
     FocusAwareStatusBar,
     Loading,
+    ParagraphText,
     parseDownloadURL,
     PROFILE_QUALITY
 } from "../../js/util";
@@ -22,7 +23,7 @@ import logout from "../../../assets/profile/logout-slim.png";
 import settings from "../../../assets/profile/settings.png";
 import privacy from "../../../assets/profile/privacy.png";
 import terms from "../../../assets/profile/terms.png";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {logoutFirebase} from "../../../server/auth";
 import {friend, getUserCircles, getUserFriends, resetDisplayName, unfriend} from "../../../server/user";
 import {auth} from "../../../server/config/config";
@@ -33,10 +34,10 @@ import Animated from "react-native-reanimated";
 import {useCircleStore, useFriendStore} from "../../js/zustand";
 
 export default function ProfileScreen(props) {
-    const [showModal, setShowModal] = useState(false)
     const [authUser] = useState(auth.currentUser)
     const [edited, setEdited] = useState(false)
     const [profilePic, setProfilePic] = useState(undefined)
+    const [refreshing, setRefreshing] = useState(false)
     const user = props.route.params.user;
     const circles = useCircleStore(s => s.circles)
     const friends = useFriendStore(s => s.friends)
@@ -61,7 +62,6 @@ export default function ProfileScreen(props) {
 
         if (!result.canceled) {
             setProfilePic(result.assets[0].uri)
-            console.log(typeof (result.assets[0]))
 
             // Use profile picture in state, set profile picture, and invalidate profile query
             setEdited(true)
@@ -72,16 +72,17 @@ export default function ProfileScreen(props) {
     }
 
     function handleLogout() {
-        logoutFirebase().then(() => {
-        }).catch(err => {
+        logoutFirebase().then().catch(err => {
             console.warn(err);
         });
     }
 
-    function handleCreationTime() {
-        const arr = user.creationTime.toString().split(" ")
-        return `${arr[2]} ${arr[3]}`
-    }
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 2000)
+    }, [])
 
     if (!user || profilePictureQuery.isPending)
         return <Loading/>
@@ -93,7 +94,10 @@ export default function ProfileScreen(props) {
             <SafeAreaView>
                 <ScrollView contentContainerStyle={styles.profileContainer}
                             showsVerticalScrollIndicator={false}
-                            decelerationRate={"fast"}>
+                            decelerationRate={"fast"}
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>
+                            }>
                     <View style={styles.profilePic}>
                         <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: "profile", uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)})}>
                             <Animated.Image source={{uri: edited ? profilePic : URL.createObjectURL(profilePictureQuery.data)}}
@@ -109,40 +113,11 @@ export default function ProfileScreen(props) {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.textContainer}>
-                        <Text style={[text.h1, text.pepper]} numberOfLines={1} adjustsFontSizeToFit={true}>{user.displayName}</Text>
-                        <Text style={[text.p, text.black]}>@{user.username}</Text>
-                    </View>
+                    <UsernameInfo user={user}/>
 
-                    <View style={styles.contactInfo}>
-                        {user.phoneNumber ? (
-                            <View style={styles.infoLine}>
-                                <Image source={phone} style={{width: 25, height: 25}}/>
-                                <Text style={[text.black, text.p]}>{user.phoneNumber}</Text>
-                            </View>
-                        ) : null}
-                        <View style={styles.infoLine}>
-                            <Image source={mail} style={{width: 25, height: 25}}/>
-                            <Text style={[text.black, text.p]}>{user.email}</Text>
-                        </View>
-                        <View style={styles.infoLine}>
-                            <Image source={joined} style={{width: 22, height: 25, objectFit: "contain"}}/>
-                            <Text style={[text.black, text.p]}>Joined {handleCreationTime()}</Text>
-                        </View>
-                    </View>
+                    <ContactInfo user={user}/>
 
-                    <View style={styles.socialInfo}>
-                        <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("Circles", {circles: circles})}>
-                            <Image source={circlesImg} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{circles.length} Circle{circles.length === 1 ? "" : "s"}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: friends})}>
-                            <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{friends.length} Friend{friends.length === 1 ? "" : "s"}</Text>
-                        </TouchableOpacity>
-                    </View>
+                    <SocialInfo circles={circles} friends={friends} {...props}/>
 
                     <View style={styles.optionContainer}>
                         <TouchableOpacity style={styles.option} activeOpacity={0.7}>
@@ -165,8 +140,6 @@ export default function ProfileScreen(props) {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-
-
             </SafeAreaView>
         </View>
     )
@@ -174,41 +147,45 @@ export default function ProfileScreen(props) {
 
 export function OtherProfileScreen(props) {
     const friends = useFriendStore(s => s.friends)
-    const memberId = props.route.params.uid
+    const currentUserUid = auth.currentUser.uid;
+    const user = props.route.params.user;
     const sharedElementId = Math.random().toString(16).slice(2)
     const queryClient = useQueryClient()
-    const [isFriend, setIsFriend] = useState(friends.includes(memberId))
+    const [refreshing, setRefreshing] = useState(false)
+    const [isFriend, setIsFriend] = useState(friends.includes(user.uid))
 
     const friendQuery = useQuery({
-        queryKey: ['friends', memberId],
-        queryFn: async () => await getUserFriends(memberId)
+        queryKey: ['friends', user.uid],
+        queryFn: async () => await getUserFriends(user.uid)
     })
 
     const circleQuery = useQuery({
-        queryKey: ['circles', memberId],
-        queryFn: async () => await getUserCircles(memberId)
+        queryKey: ['circles', user.uid],
+        queryFn: async () => await getUserCircles(user.uid)
     })
-
-    function handleCreationTime() {
-        const arr = props.route.params.creationTime.toString().split(" ")
-        return `${arr[2]} ${arr[3]}`
-    }
 
     async function handleToggleFriend(){
         const tempIsFriend = isFriend
         setIsFriend(curr => !curr)
 
         if (tempIsFriend) {
-            await unfriend(props.route.params.user.uid, memberId)
+            await unfriend(currentUserUid, user.uid)
         } else {
-            await friend(props.route.params.user.uid, memberId)
+            await friend(currentUserUid, user.uid)
         }
 
-        await queryClient.invalidateQueries({queryKey: ["friends", memberId]})
+        await queryClient.invalidateQueries({queryKey: ["friends", user.uid]})
     }
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true)
+        setTimeout(() => {
+            setRefreshing(false)
+        }, 2000)
+    }, [])
+
     useEffect(() => {
-        setIsFriend(friends.includes(memberId))
+        setIsFriend(friends.includes(user.uid))
     }, [friends])
 
     if (friendQuery.isLoading || circleQuery.isLoading)
@@ -223,61 +200,94 @@ export function OtherProfileScreen(props) {
 
                 <ScrollView contentContainerStyle={styles.profileContainer}
                             showsVerticalScrollIndicator={false}
-                            decelerationRate={"fast"}>
+                            decelerationRate={"fast"}
+                            refreshControl={
+                                <RefreshControl refreshing={refreshing} onRefresh={onRefresh}></RefreshControl>
+                            }>
                     <StatusBar barStyle={"dark-content"}/>
 
                     <View style={styles.profilePic}>
                         <TouchableOpacity activeOpacity={0.9} onPress={() => props.navigation.navigate("ProfilePreview", {tag: sharedElementId, uri: URL.createObjectURL(props.route.params.photo)})}>
-                            <Animated.Image source={{uri: URL.createObjectURL(props.route.params.photo)}}
+                            <Animated.Image source={{uri: URL.createObjectURL(user.photo)}}
                                             sharedTransitionTag={`image-${sharedElementId}`}
                                             style={styles.profilePicImg}/>
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.textContainer}>
-                        <Text style={[text.h1, text.pepper]} numberOfLines={1} adjustsFontSizeToFit={true}>{props.route.params.displayName}</Text>
-                        <Text style={[text.p, text.black]}>@{props.route.params.username}</Text>
-                    </View>
+                    <UsernameInfo user={user}/>
 
-                    {props.route.params.uid === auth.currentUser.uid ? null : (
+                    {user.uid === currentUserUid ? null : (
                         <TouchableOpacity style={isFriend ? styles.friend : styles.follow} activeOpacity={0.6}
                                           onPress={() => handleToggleFriend()}>
                             <Text style={[text.p, isFriend ? text.white : text.pepper]}>{isFriend ? "Friends" : "Follow"}</Text>
                         </TouchableOpacity>
                     )}
 
-                    <View style={styles.contactInfo}>
-                        {props.route.params.phoneNumber ? (
-                            <View style={styles.infoLine}>
-                                <Image source={phone} style={{width: 25, height: 25}}/>
-                                <Text style={[text.black, text.p]}>{props.route.params.phoneNumber}</Text>
-                            </View>
-                        ) : null}
-                        <View style={styles.infoLine}>
-                            <Image source={mail} style={{width: 25, height: 25}}/>
-                            <Text style={[text.black, text.p]}>{props.route.params.email}</Text>
-                        </View>
-                        <View style={styles.infoLine}>
-                            <Image source={joined} style={{width: 22, height: 25, objectFit: "contain"}}/>
-                            <Text style={[text.black, text.p]}>Joined {handleCreationTime()}</Text>
-                        </View>
-                    </View>
+                    <ContactInfo user={user}/>
 
-                    <View style={styles.socialInfo}>
-                        <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("Circles", {circles: circleQuery.data})}>
-                            <Image source={circlesImg} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{circleQuery.data.length} Circle{circleQuery.data.length === 1 ? "" : "s"}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.socialSection}
-                                          onPress={() => props.navigation.push("MembersList", {header: "Friends", friends: friendQuery.data})}>
-                            <Image source={followers} style={styles.socialIcon}/>
-                            <Text style={[text.pepper, text.h4]}>{friendQuery.data.length} Friend{friendQuery.data.length === 1 ? "" : "s"}</Text>
+                    <SocialInfo circles={circleQuery.data} friends={friendQuery.data} {...props}/>
 
-                        </TouchableOpacity>
-                    </View>
                 </ScrollView>
             </CustomSafeAreaView>
+        </View>
+    )
+}
+
+function UsernameInfo(props) {
+    const user = props.user;
+
+    return (
+        <View style={styles.textContainer}>
+            <Text style={[text.h1, text.pepper]} numberOfLines={1} adjustsFontSizeToFit={true}>{user.displayName}</Text>
+            <ParagraphText>@{user.username}</ParagraphText>
+        </View>
+    )
+}
+
+function ContactInfo(props) {
+    const user = props.user;
+
+    function handleCreationTime() {
+        const arr = user.creationTime.toString().split(" ")
+        return `${arr[2]} '${arr[3].slice(2)}`
+    }
+
+    return (
+        <View style={styles.contactInfo}>
+            {user.phoneNumber ? (
+                <View style={styles.infoLine}>
+                    <Image source={phone} style={{width: 25, height: 25}}/>
+                    <ParagraphText>{user.phoneNumber}</ParagraphText>
+                </View>
+            ) : null}
+            <View style={styles.infoLine}>
+                <Image source={mail} style={{width: 25, height: 25}}/>
+                <ParagraphText>{user.email}</ParagraphText>
+            </View>
+            <View style={styles.infoLine}>
+                <Image source={joined} style={{width: 22, height: 25, objectFit: "contain"}}/>
+                <ParagraphText>Joined {handleCreationTime()}</ParagraphText>
+            </View>
+        </View>
+    )
+}
+
+function SocialInfo(props) {
+    const friends = props.friends;
+    const circles = props.circles;
+
+    return (
+        <View style={styles.socialInfo}>
+            <TouchableOpacity style={styles.socialSection}
+                              onPress={() => props.navigation.push("Circles", {circles})}>
+                <Image source={circlesImg} style={styles.socialIcon}/>
+                <Text style={[text.pepper, text.h4]}>{circles.length} Circle{circles.length === 1 ? "" : "s"}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialSection}
+                              onPress={() => props.navigation.push("MembersList", {header: "Friends", friends})}>
+                <Image source={followers} style={styles.socialIcon}/>
+                <Text style={[text.pepper, text.h4]}>{friends.length} Friend{friends.length === 1 ? "" : "s"}</Text>
+            </TouchableOpacity>
         </View>
     )
 }

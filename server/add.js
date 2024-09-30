@@ -25,33 +25,12 @@ export async function addCircle(community, title, description, cover, logo, isPu
     }
 }
 
-export async function addPost(title, description, media) {
-    const user = auth.currentUser;
-
-    try {
-        const postRef = await addDoc(collection(db, "posts"), {
-            title,
-            description,
-            media,
-            author: user.uid,
-            creationTime: Timestamp.now(),
-        })
-        await logUserPost(user.uid, postRef.id)
-        return postRef.id
-    } catch(err) {
-        console.warn(err)
-        throw err
-    }
-}
-
-export async function addReply(title, description, media, parentId) {
-    const postId = await addPost(title, description, media, parent)
-    const postDoc = doc(db, `posts/${parentId}/replies/${postId}`)
-
+export async function addPostToCircle(circleId, postId) {
+    const postDoc = doc(db, `circles/${circleId}/posts/${postId}`)
     try {
         await setDoc(postDoc, {})
-    } catch(err) {
-        console.warn(err)
-        throw err
+    } catch (err) {
+        console.warn(err.message);
+        throw err;
     }
 }

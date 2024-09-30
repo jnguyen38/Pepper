@@ -226,7 +226,16 @@
     width: 100%;
     height: 40px;
     padding: 3px 10px 3px 10px;
-    background-color: #ffffffdd;
+    background-color: #ffffffbb;
+    border-radius: 5px;
+    color: #6464f6;
+}
+
+.addDescriptionInput {
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    background-color: #ffffffbb;
     border-radius: 5px;
     color: #6464f6;
 }
@@ -236,4 +245,55 @@
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.addButton {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.disabledButton {
+    background-color: #ffffff22;
+    border: 1px solid #ffffff44;
+}
+
+.activeButton {
+    background-color: #ffffff;
+    border: 1px solid white;
+}
+
+.confirmation {
+    width: 50%;
+    aspect-ratio: 1/1;
+    position: absolute;
+    border-radius: 20px;
+    background-color: #6464f6bb;
+    right: 25%;
+    top: 35%;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.confirmationImage {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.notFound {
+    height: 70px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 }

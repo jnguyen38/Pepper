@@ -5,22 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19d97c30-dd75-47cf-bde4-5eee39dfed2d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/add-circle-white.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/post.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/check-circle-white.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/js/tongue.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/screens/Post.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metro.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/metro.config.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/add.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/add.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/post.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/post.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/storage.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/storage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/navbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/tabs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/tabs.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/js/text.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/text.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/js/zustand.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/zustand.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/js/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/js/util.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/screens/CircleInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/CircleInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/ProfilePreview.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/ProfilePreview.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/screens/auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/auth/Login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/InitializeUser.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/InitializeUser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/Members.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/Members.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/main/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screens/main/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/screens/main/Profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/styles/modules/CircleInfo.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/CircleInfo.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/Navbar.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/Navbar.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Circles.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Circles.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/auth/Auth.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/modules/main/Home.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/styles/modules/main/Home.module.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,23 +55,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "zustand",
-    "last_opened_file_path": "/Users/jnguyen/projects/pepper",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "yarn",
-    "ruby.rails.projectView.checked": "true",
-    "ts.external.directory.path": "/Users/jnguyen/projects/pepper/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/jnguyen/projects/pepper&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
+    &quot;ruby.rails.projectView.checked&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/jnguyen/projects/pepper/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -78,12 +85,33 @@
       <workItem from="1705010049365" duration="221000" />
       <workItem from="1705540466088" duration="83776000" />
       <workItem from="1707441131342" duration="9298000" />
-      <workItem from="1707841190520" duration="598000" />
+      <workItem from="1707841190520" duration="12683000" />
+      <workItem from="1708370618782" duration="31946000" />
+      <workItem from="1709828285608" duration="8201000" />
+      <workItem from="1713208169802" duration="845000" />
+      <workItem from="1713209650575" duration="820000" />
+      <workItem from="1718911935982" duration="4570000" />
+      <workItem from="1721614666820" duration="35000" />
+      <workItem from="1727040137974" duration="10749000" />
+      <workItem from="1727402816347" duration="21000" />
+      <workItem from="1727402912233" duration="26000" />
+      <workItem from="1727403653447" duration="17387000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
